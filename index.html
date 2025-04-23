@@ -965,20 +965,36 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Save biodiversity survey
-    function saveSurvey() {
-      const survey = {
-        date: document.getElementById('survey-date').value || new Date().toISOString().split('T')[0],
-        plantSpecies: document.getElementById('plant-species').value
+// Save biodiversity survey
+function saveSurvey() {
+  const survey = {
+    date: document.getElementById('survey-date').value || new Date().toISOString().split('T')[0],
+    plantSpecies: document.getElementById('plant-species').value,
+    animalSpecies: document.getElementById('animal-species').value,
+    dominantSpecies: document.getElementById('dominant-species').value,
+    rareSpecies: document.getElementById('rare-species').value,
+    notes: document.getElementById('survey-notes').value
+  };
+  
+  // Get current assessment
+  const currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
+  if (currentAssessment) {
+    currentAssessment.survey = survey;
+    localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
+    
+    // Show success message
+    alert('Biodiversity survey saved successfully!');
+  } else {
+    alert('Error: No current assessment found to attach survey to.');
+  }
+} // <-- This closing brace was missing
 
+// View historical assessment details
+function viewHistoricalAssessment(index) {
+  const assessment = appState.previousAssessments[index];
+  // ... rest of the function
+}
 
-
-
-
-            // View historical assessment details
-    function viewHistoricalAssessment(index) {
-      const assessment = appState.previousAssessments[index];
-      
       // Display the assessment
       elements.scoreDisplay.textContent = assessment.score;
       
