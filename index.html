@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* All your CSS styles remain exactly the same */
     :root {
       --primary: #2e7d32;
       --primary-light: #60ad5e;
@@ -45,33 +44,683 @@
       padding: 0;
     }
     
-    /* Rest of your CSS styles... */
-    /* (Include all your existing CSS styles here exactly as you had them) */
-    
-    /* Additional styles for delete button */
-    .history-item > div:first-child {
-      flex: 1;
-      cursor: pointer;
+    html {
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     
-    .delete-assessment-btn {
-      opacity: 0.7;
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
       transition: var(--transition);
-      background: none;
-      border: none;
-      color: var(--danger);
-      cursor: pointer;
-      padding: 5px;
+      min-height: 100vh;
+      padding: 20px;
     }
     
-    .delete-assessment-btn:hover {
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* Map Container Styles */
+    #map-container {
+      position: relative;
+      height: 250px;
+      width: 100%;
+      border-radius: var(--radius);
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    
+    #map {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .map-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0,0,0,0.05);
+      color: var(--text-light);
+      z-index: 1000;
+    }
+
+    #map-container, #map {
+      height: 100%;
+      width: 100%;
+      min-height: 250px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 25px;
+      margin-bottom: 25px;
+      transition: var(--transition);
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .progress-container {
+      margin: 20px 0;
+    }
+    
+    .progress-bar {
+      height: 10px;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-light), var(--primary));
+      width: 0%;
+      transition: width 0.5s ease;
+      border-radius: 5px;
+    }
+    
+    .progress-text {
+      text-align: right;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+    
+    .question {
+      margin: 20px 0;
+      padding: 15px;
+      border-left: 4px solid var(--primary);
+      background-color: rgba(46, 125, 50, 0.05);
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+    
+    .question-text {
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .option {
+      flex: 1;
+      min-width: 120px;
+    }
+    
+    .option input[type="radio"] {
+      display: none;
+    }
+    
+    .option label {
+      display: block;
+      padding: 12px 15px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+    }
+    
+    .option input[type="radio"]:checked + label {
+      background-color: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+    
+    .option:hover label {
+      background-color: rgba(46, 125, 50, 0.1);
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #0277bd;
+      transform: translateY(-2px);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background-color: rgba(46, 125, 50, 0.1);
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .result-container {
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .score-display {
+      font-size: 3rem;
+      font-weight: 700;
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .score-low { color: var(--danger); }
+    .score-medium { color: var(--warning); }
+    .score-high { color: var(--success); }
+    
+    .feedback {
+      margin: 25px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      background-color: rgba(2, 136, 209, 0.1);
+      border-left: 4px solid var(--secondary);
+    }
+    
+    .recommendation {
+      margin: 10px 0;
+      padding: 15px;
+      background-color: rgba(46, 125, 50, 0.1);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .recommendation i {
+      color: var(--primary);
+      font-size: 1.2rem;
+      margin-top: 2px;
+    }
+    
+    .visualization {
+      margin: 30px 0;
+      height: 300px;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    
+    .history-item {
+      padding: 15px;
+      margin: 10px 0;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .history-item:hover {
+      transform: translateX(5px);
+      box-shadow: var(--shadow);
+    }
+    
+    .history-score {
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background-color: rgba(46, 125, 50, 0.2);
+    }
+    
+    .survey-question {
+      margin: 20px 0;
+    }
+    
+    .survey-question label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: var(--radius);
+      background-color: var(--card-bg);
+      color: var(--text);
+      transition: var(--transition);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+    }
+    
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .checkbox-container input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+    
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: var(--transition);
+    }
+    
+    .tab.active {
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+/* Icons for dark toggle slider */
+.toggle-switch .sun::after,
+.toggle-switch .moon::after {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  transition: opacity 0.3s;
+}
+
+.toggle-switch .sun::after {
+  content: "\f185"; /* Sun icon */
+  left: 10px;
+  opacity: 1;
+}
+
+.toggle-switch .moon::after {
+  content: "\f186"; /* Moon icon */
+  right: 10px;
+  opacity: 0.5;
+}
+
+.toggle-switch input:checked + .slider .sun::after {
+  opacity: 0.5;
+}
+
+.toggle-switch input:checked + .slider .moon::after {
+  opacity: 1;
+}
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+      z-index: 2;
+    }
+    
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(30px);
+    }
+    
+.toggle-switch input:checked + .slider {
+  background-color: var(--primary);
+}
+
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(40px);
+}
+
+    .location-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .location-input input {
+      flex: 1;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background-color: var(--primary-light);
+      color: white;
+    }
+    
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      margin-left: 5px;
+      cursor: help;
+    }
+    
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
       opacity: 1;
-      transform: scale(1.1);
+    }
+    
+.delete-assessment-btn {
+  transition: var(--transition);
+  opacity: 0.7;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.delete-assessment-btn:hover {
+  opacity: 1;
+  background-color: rgba(211, 47, 47, 0.1);
+  transform: scale(1.1);
+}
+
+.history-item:hover .delete-assessment-btn {
+  display: block;
+}
+
+/* Add to your CSS */
+#assessment-name {
+  margin-bottom: 15px;
+}
+
+.assessment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.assessment-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+    /* Photo upload styles */
+    .photo-upload-container {
+      margin: 20px 0;
+    }
+    
+    .photo-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .photo-thumbnail {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 2px solid var(--primary-light);
+      position: relative;
+    }
+    
+    .remove-photo {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-color: var(--danger);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .upload-area {
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 15px;
+    }
+    
+    .upload-area:hover {
+      background-color: rgba(46, 125, 50, 0.1);
+    }
+    
+    .upload-area i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .photo-caption-input {
+      margin-top: 10px;
+      width: 100%;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .options {
+        flex-direction: column;
+      }
+      
+      .option {
+        width: 100%;
+      }
+      
+      .photo-thumbnail {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .map-container {
+        height: 250px;
+      }
+    }
+    
+    /* Animation classes */
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .shake {
+      animation: shake 0.5s;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    /* Leaflet Control Styling */
+    .leaflet-control {
+      background-color: var(--card-bg) !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow) !important;
+      transition: var(--transition);
+    }
+    
+    .leaflet-popup-content {
+      font-family: inherit !important;
+      padding: 10px !important;
+    }
+    
+    .leaflet-popup-content-wrapper {
+      border-radius: var(--radius) !important;
     }
   </style>
 </head>
 <body>
-  <!-- Your HTML structure remains exactly the same -->
   <div class="container">
     <header>
       <div class="logo">
@@ -79,39 +728,358 @@
         <h1>EcoVision Pro</h1>
       </div>
       <div class="controls">
-        <label class="toggle-switch">
-          <input type="checkbox" id="theme-toggle">
-          <span class="slider"></span>
-        </label>
+<label class="toggle-switch">
+  <input type="checkbox" id="theme-toggle">
+  <span class="slider">
+    <span class="sun"></span> <!-- Empty now -->
+    <span class="moon"></span> <!-- Empty now -->
+  </span>
+</label>
         <button id="print-btn" class="btn btn-outline">
           <i class="fas fa-print"></i> Print
         </button>
       </div>
     </header>
     
-    <!-- Rest of your HTML remains exactly the same -->
-    <!-- (Include all your existing HTML here exactly as you had it) -->
+    <div class="card" id="assessment-card">
+      <h2 class="card-title">
+        <i class="fas fa-clipboard-check"></i> Ecosystem Health Assessment
+      </h2>
+      <p>Complete this assessment to evaluate the health of your local ecosystem. Answer each question based on your observations.</p>
+      
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0% complete</div>
+      </div>
+      
+      <div id="questions-container"></div>
+      
+      <div style="text-align: center; margin-top: 30px;">
+        <button id="submit-btn" class="btn btn-primary" disabled>
+          <i class="fas fa-calculator"></i> Calculate Score
+        </button>
+      </div>
+    </div>
     
+    <div class="card result-container hidden" id="result-container">
+      <h2 class="card-title">
+        <i class="fas fa-chart-line"></i> Assessment Results
+      </h2>
+      
+      <div style="text-align: center;">
+        <div class="score-display" id="score-display">0</div>
+        <div id="score-description">Loading assessment...</div>
+      </div>
+      
+      <div class="tabs">
+        <div class="tab active" data-tab="summary">Summary</div>
+        <div class="tab" data-tab="recommendations">Recommendations</div>
+        <div class="tab" data-tab="history">History</div>
+        <div class="tab" data-tab="survey">Biodiversity Survey</div>
+        <div class="tab" data-tab="photos">Photo Documentation</div>
+      </div>
+      
+<div class="survey-question">
+  <label for="assessment-name">Assessment Name</label>
+  <input type="text" id="assessment-name" class="form-control" placeholder="Give this assessment a name">
+</div>
+
+      <div class="tab-content active" id="summary-tab">
+        <div class="feedback">
+          <h3><i class="fas fa-info-circle"></i> Overview</h3>
+          <p id="general-feedback">Your ecosystem assessment is being calculated...</p>
+        </div>
+        
+        <div class="visualization" id="radar-chart-container">
+          <canvas id="radar-chart"></canvas>
+        </div>
+        
+        <div class="location-input">
+          <input type="text" id="location-input" class="form-control" placeholder="Enter assessment location (e.g., Central Park, New York)">
+          <button id="save-location-btn" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save
+          </button>
+        </div>
+        
+        <div class="map-container" id="map-container">
+          <div id="map"></div>
+          <div class="map-placeholder" id="map-placeholder">
+            <i class="fas fa-map-marked-alt fa-3x"></i>
+            <p>Location map will display here</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="tab-content" id="recommendations-tab">
+        <h3><i class="fas fa-lightbulb"></i> Actionable Recommendations</h3>
+        <p>Based on your assessment results, here are specific actions you can take to improve your ecosystem health:</p>
+        
+        <div id="recommendations-container"></div>
+        
+        <div class="feedback" style="margin-top: 20px;">
+          <h3><i class="fas fa-calendar-alt"></i> Suggested Timeline</h3>
+          <p>For best results, implement these recommendations according to the following timeline:</p>
+          <div id="timeline-container"></div>
+        </div>
+      </div>
+      
+      <div class="tab-content" id="history-tab">
+        <h3><i class="fas fa-history"></i> Assessment History</h3>
+        <p>Review your previous ecosystem assessments to track changes over time:</p>
+        
+        <div id="history-container"></div>
+        
+<div style="text-align: center; margin: 20px 0;">
+  <button id="export-btn" class="btn btn-outline">
+    <i class="fas fa-file-export"></i> Export Assessments
+  </button>
+  <button id="import-btn" class="btn btn-outline">
+    <i class="fas fa-file-import"></i> Import Assessments
+  </button>
+  <input type="file" id="import-file" accept=".json" style="display: none;">
+</div>
+
+        <div class="visualization" id="trend-chart-container">
+          <canvas id="trend-chart"></canvas>
+        </div>
+      </div>
+      
+      <div class="tab-content" id="survey-tab">
+        <h3><i class="fas fa-binoculars"></i> Biodiversity Survey</h3>
+        <p>Document the species present in your ecosystem to track biodiversity changes:</p>
+        
+        <div id="survey-container">
+          <div class="survey-question">
+            <label for="survey-date">Survey Date</label>
+            <input type="date" id="survey-date" class="form-control" value="">
+          </div>
+          
+          <div class="survey-question">
+            <label for="plant-species">Native Plant Species Count</label>
+            <input type="number" id="plant-species" class="form-control" min="0" placeholder="Estimated number of native plant species">
+          </div>
+          
+          <div class="survey-question">
+            <label for="animal-species">Animal Species Observed</label>
+            <input type="number" id="animal-species" class="form-control" min="0" placeholder="Number of animal species observed">
+          </div>
+          
+          <div class="survey-question">
+            <label for="dominant-species">Dominant Species</label>
+            <input type="text" id="dominant-species" class="form-control" placeholder="List dominant species separated by commas">
+          </div>
+          
+          <div class="survey-question">
+            <label for="rare-species">Rare/Endangered Species</label>
+            <input type="text" id="rare-species" class="form-control" placeholder="List any rare or endangered species observed">
+          </div>
+          
+          <div class="survey-question">
+            <label for="survey-notes">Additional Notes</label>
+            <textarea id="survey-notes" class="form-control" rows="4" placeholder="Record any other observations..."></textarea>
+          </div>
+          
+          <div style="text-align: center; margin-top: 20px;">
+            <button id="save-survey-btn" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Survey
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="tab-content" id="photos-tab">
+        <h3><i class="fas fa-camera"></i> Photo Documentation</h3>
+        <p>Upload photos to document the current state of the ecosystem. These will be attached to your assessment.</p>
+        
+        <div class="photo-upload-container">
+          <div class="upload-area" id="upload-area">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Click to upload photos or drag and drop files here</p>
+            <input type="file" id="photo-upload" accept="image/*" multiple style="display: none;">
+          </div>
+          
+          <div class="photo-preview" id="photo-preview"></div>
+          
+          <div class="survey-question">
+            <label for="photo-caption">Photo Caption/Notes</label>
+            <input type="text" id="photo-caption" class="form-control photo-caption-input" placeholder="Add caption for these photos (optional)">
+          </div>
+          
+          <div style="text-align: center; margin-top: 20px;">
+            <button id="save-photos-btn" class="btn btn-primary">
+              <i class="fas fa-save"></i> Save Photos
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 30px;">
+        <button id="new-assessment-btn" class="btn btn-secondary">
+          <i class="fas fa-redo"></i> Start New Assessment
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Enhanced data model (same as before)
+    // Enhanced data model
     const ecoData = {
       questions: [
-        /* Your question data remains the same */
+        {
+          id: "plant-diversity",
+          text: "Native plant species diversity",
+          description: "Assess the variety and abundance of native plant species in the area.",
+          options: [
+            { value: 3, label: "High Diversity", description: "Many native species present with good distribution" },
+            { value: 2, label: "Moderate Diversity", description: "Several native species but some dominance by a few" },
+            { value: 1, label: "Low Diversity", description: "Few native species, possibly dominated by invasives" }
+          ]
+        },
+        {
+          id: "soil-health",
+          text: "Soil health and erosion",
+          description: "Evaluate soil quality and signs of erosion or degradation.",
+          options: [
+            { value: 3, label: "Healthy Soil", description: "Minimal erosion, good structure, abundant organic matter" },
+            { value: 2, label: "Moderate Health", description: "Some erosion or compaction but recovering" },
+            { value: 1, label: "Poor Health", description: "Significant erosion, compaction, or degradation" }
+          ]
+        },
+        {
+          id: "water-quality",
+          text: "Water quality indicators",
+          description: "Assess visible water quality indicators in nearby water bodies.",
+          options: [
+            { value: 3, label: "Excellent", description: "Clear water, diverse aquatic life, no pollution signs" },
+            { value: 2, label: "Moderate", description: "Some turbidity or limited aquatic diversity" },
+            { value: 1, label: "Poor", description: "Cloudy water, algae blooms, or pollution signs" }
+          ]
+        },
+        {
+          id: "invasive-species",
+          text: "Presence of invasive species",
+          description: "Evaluate the presence and impact of invasive plant or animal species.",
+          options: [
+            { value: 3, label: "Minimal", description: "Few or no invasive species present" },
+            { value: 2, label: "Moderate", description: "Some invasive species but not dominant" },
+            { value: 1, label: "Significant", description: "Invasive species dominant or causing harm" }
+          ]
+        },
+        {
+          id: "wildlife-activity",
+          text: "Wildlife activity signs",
+          description: "Assess evidence of wildlife presence and diversity.",
+          options: [
+            { value: 3, label: "Abundant", description: "Diverse wildlife signs (tracks, nests, sightings)" },
+            { value: 2, label: "Moderate", description: "Some wildlife signs but limited diversity" },
+            { value: 1, label: "Limited", description: "Few or no signs of wildlife activity" }
+          ]
+        },
+        {
+          id: "canopy-cover",
+          text: "Tree canopy cover",
+          description: "Evaluate the extent and health of tree canopy coverage.",
+          options: [
+            { value: 3, label: "Extensive", description: "Dense, multi-layered canopy with mature trees" },
+            { value: 2, label: "Moderate", description: "Partial canopy coverage with some gaps" },
+            { value: 1, label: "Sparse", description: "Minimal canopy coverage, mostly open" }
+          ]
+        },
+        {
+          id: "pollinator-signs",
+          text: "Pollinator activity",
+          description: "Assess signs of pollinator insects and other species.",
+          options: [
+            { value: 3, label: "Abundant", description: "Frequent pollinator sightings on diverse plants" },
+            { value: 2, label: "Moderate", description: "Some pollinator activity but limited" },
+            { value: 1, label: "Limited", description: "Few or no pollinators observed" }
+          ]
+        }
       ],
       recommendations: {
-        /* Your recommendation data remains the same */
+        low: [
+          {
+            title: "Immediate invasive species control",
+            description: "Prioritize removal of dominant invasive species to allow native species recovery.",
+            priority: "High",
+            timeline: "Immediate",
+            icon: "fas fa-tree"
+          },
+          {
+            title: "Erosion control measures",
+            description: "Implement erosion control such as planting ground cover, creating berms, or installing silt fences.",
+            priority: "High",
+            timeline: "Within 1 month",
+            icon: "fas fa-water"
+          },
+          {
+            title: "Native species planting",
+            description: "Begin a phased planting program with diverse native species suited to the area.",
+            priority: "Medium",
+            timeline: "Next planting season",
+            icon: "fas fa-seedling"
+          }
+        ],
+        medium: [
+          {
+            title: "Targeted invasive removal",
+            description: "Remove invasive species in prioritized areas to protect native biodiversity.",
+            priority: "Medium",
+            timeline: "Within 3 months",
+            icon: "fas fa-trash-alt"
+          },
+          {
+            title: "Habitat enhancement",
+            description: "Add features like nesting boxes, pollinator gardens, or water sources.",
+            priority: "Medium",
+            timeline: "Within 6 months",
+            icon: "fas fa-home"
+          },
+          {
+            title: "Community monitoring program",
+            description: "Establish regular monitoring with community involvement to track changes.",
+            priority: "Low",
+            timeline: "Within 1 year",
+            icon: "fas fa-users"
+          }
+        ],
+        high: [
+          {
+            title: "Maintenance monitoring",
+            description: "Continue regular monitoring to maintain ecosystem health.",
+            priority: "Low",
+            timeline: "Ongoing",
+            icon: "fas fa-clipboard-list"
+          },
+          {
+            title: "Selective enhancement",
+            description: "Identify opportunities to add rare native species or microhabitats.",
+            priority: "Low",
+            timeline: "Next planting season",
+            icon: "fas fa-plus-circle"
+          },
+          {
+            title: "Education and outreach",
+            description: "Share your success and methods with the community to inspire others.",
+            priority: "Medium",
+            timeline: "Within 1 year",
+            icon: "fas fa-chalkboard-teacher"
+          }
+        ]
       },
       scoreDescriptions: {
-        /* Your score descriptions remain the same */
+        low: "Ecosystem is in poor health and requires immediate intervention to prevent further degradation.",
+        medium: "Ecosystem shows signs of stress but has recovery potential with proper management.",
+        high: "Ecosystem is in good health with balanced biodiversity and minimal threats."
       }
     };
 
-    // App state (same as before)
+    // App state
     let appState = {
       currentAnswers: {},
       previousAssessments: [],
@@ -120,11 +1088,12 @@
       darkMode: false,
       map: null,
       marker: null,
+      geocoder: null,
       currentPhotos: [],
       photoCounter: 0
     };
 
-    // DOM elements (same as before)
+    // DOM elements
     const elements = {
       questionsContainer: document.getElementById('questions-container'),
       resultContainer: document.getElementById('result-container'),
@@ -178,11 +1147,20 @@
       }
     }
 
+    // Toggle dark/light theme
+    function toggleTheme() {
+      if (appState.darkMode) {
+        disableDarkMode();
+      } else {
+        enableDarkMode();
+      }
+    }
+
     function enableDarkMode() {
       document.documentElement.setAttribute('data-theme', 'dark');
       appState.darkMode = true;
       localStorage.setItem('darkMode', 'true');
-      elements.themeToggle.checked = true;
+      if (elements.themeToggle) elements.themeToggle.checked = true;
       refreshCharts();
     }
 
@@ -190,16 +1168,8 @@
       document.documentElement.removeAttribute('data-theme');
       appState.darkMode = false;
       localStorage.setItem('darkMode', 'false');
-      elements.themeToggle.checked = false;
+      if (elements.themeToggle) elements.themeToggle.checked = false;
       refreshCharts();
-    }
-
-    function toggleTheme() {
-      if (appState.darkMode) {
-        disableDarkMode();
-      } else {
-        enableDarkMode();
-      }
     }
 
     function refreshCharts() {
@@ -216,11 +1186,11 @@
 
     // Initialize Leaflet Map
     function initMap() {
-      const defaultCoords = [0, 0]; // Default coordinates
+      const burnieCoords = [-41.0524, 145.9042];
       
       appState.map = L.map('map', {
         zoomControl: false
-      }).setView(defaultCoords, 2);
+      }).setView(burnieCoords, 10);
       
       L.control.zoom({
         position: 'topright'
@@ -242,7 +1212,7 @@
       });
       
       // Create marker (initially hidden)
-      appState.marker = L.marker(defaultCoords, {
+      appState.marker = L.marker(burnieCoords, {
         icon: greenIcon,
         opacity: 0
       }).addTo(appState.map);
@@ -257,7 +1227,7 @@
         appState.map.invalidateSize();
       });
     }
-
+    
     // Geocode location using OpenStreetMap's Nominatim
     function geocodeLocation(location) {
       if (!location) return;
@@ -340,6 +1310,12 @@
 
     // Setup event listeners
     function setupEventListeners() {
+
+// Add export/import event listeners
+document.getElementById('export-btn').addEventListener('click', exportAssessments);
+document.getElementById('import-btn').addEventListener('click', () => document.getElementById('import-file').click());
+document.getElementById('import-file').addEventListener('change', importAssessments);
+
       // Radio button changes
       document.querySelectorAll('input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', function() {
@@ -820,217 +1796,239 @@
       });
     }
 
-    // Save current assessment
-    function saveAssessment(score, categoryScores) {
-      const assessment = {
-        date: new Date().toLocaleDateString(),
-        score: score,
-        categoryScores: categoryScores,
-        answers: appState.currentAnswers,
-        timestamp: new Date().getTime()
-      };
-      
-      appState.previousAssessments.push(assessment);
-      localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
-      
-      // Update history display
-      renderHistory();
-    }
+// // Save current assessment
+function saveAssessment(score, categoryScores) {
+  const assessmentName = document.getElementById('assessment-name').value.trim() || 
+                        `Assessment ${appState.previousAssessments.length + 1}`;
+  const location = elements.locationInput.value.trim();
 
-    // Render assessment history with delete buttons
-    function renderHistory() {
-      if (appState.previousAssessments.length === 0) {
-        elements.historyContainer.innerHTML = `
-          <div style="text-align: center; padding: 20px; color: var(--text-light);">
-            <i class="fas fa-history fa-2x" style="margin-bottom: 10px;"></i>
-            <p>No previous assessments found</p>
-          </div>
-        `;
-        return;
-      }
-      
-      // Sort by date (newest first)
-      const sortedAssessments = [...appState.previousAssessments].sort((a, b) => b.timestamp - a.timestamp);
-      
-      let html = sortedAssessments.map((assessment, index) => {
-        let scoreClass;
-        if (assessment.score < 40) {
-          scoreClass = 'score-low';
-        } else if (assessment.score < 70) {
-          scoreClass = 'score-medium';
-        } else {
-          scoreClass = 'score-high';
-        }
-        
-        // Check if this assessment has photos
-        const hasPhotos = assessment.photos && assessment.photos.length > 0;
-        
-        return `
-          <div class="history-item">
-            <div data-index="${index}">
-              <strong>${assessment.date}</strong>
-              <div class="small">${assessment.location || 'No location specified'}</div>
-              ${hasPhotos ? '<span class="badge"><i class="fas fa-camera"></i> Photos</span>' : ''}
-            </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div class="history-score ${scoreClass}">${assessment.score}/100</div>
-              <button class="delete-assessment-btn" data-index="${index}">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-      
-      elements.historyContainer.innerHTML = html;
-      
-      // Add click handlers to view historical assessments
-      document.querySelectorAll('.history-item > div:first-child').forEach(item => {
-        item.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          viewHistoricalAssessment(index);
-        });
-      });
-      
-      // Add click handlers to delete buttons
-      document.querySelectorAll('.delete-assessment-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.stopPropagation(); // Prevent triggering the history item click
-          const index = parseInt(this.getAttribute('data-index'));
-          deleteAssessment(index);
-        });
-      });
-    }
-
-    // Delete an assessment from history
-    function deleteAssessment(index) {
-      if (confirm('Are you sure you want to delete this assessment? This cannot be undone.')) {
-        // Remove the assessment from the array
-        appState.previousAssessments.splice(index, 1);
-        
-        // Update localStorage
-        localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
-        
-        // Re-render history
-        renderHistory();
-        
-        // If we deleted the current assessment being viewed, reset the view
-        if (elements.resultContainer.classList.contains('active')) {
-          const currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
-          if (!currentAssessment) {
-            resetAssessment();
-          }
-        }
-      }
-    }
-
-    // View historical assessment details
-    function viewHistoricalAssessment(index) {
-      const assessment = appState.previousAssessments[index];
-      
-      // Display the assessment
-      elements.scoreDisplay.textContent = assessment.score;
-      
-      let scoreClass;
-      if (assessment.score < 40) {
-        scoreClass = 'score-low';
-      } else if (assessment.score < 70) {
-        scoreClass = 'score-medium';
-      } else {
-        scoreClass = 'score-high';
-      }
-      
-      elements.scoreDisplay.className = `score-display ${scoreClass}`;
-      elements.scoreDescription.textContent = 
-        assessment.score < 40 ? ecoData.scoreDescriptions.low :
-        assessment.score < 70 ? ecoData.scoreDescriptions.medium :
-        ecoData.scoreDescriptions.high;
-      
-      // Update location if exists
-      if (assessment.location) {
-        elements.locationInput.value = assessment.location;
-        geocodeLocation(assessment.location);
-      } else {
-        elements.locationInput.value = '';
-        elements.mapPlaceholder.classList.remove('hidden');
-      }
-      
-      // Create radar chart for historical data
-      createRadarChart(assessment.categoryScores);
-      
-      // Switch to summary tab
-      switchTab({ target: document.querySelector('.tab[data-tab="summary"]') });
-      
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-// Save biodiversity survey
-function saveSurvey() {
-  const survey = {
-    date: document.getElementById('survey-date').value || new Date().toISOString().split('T')[0],
-    plantSpecies: document.getElementById('plant-species').value,
-    animalSpecies: document.getElementById('animal-species').value,
-    dominantSpecies: document.getElementById('dominant-species').value,
-    rareSpecies: document.getElementById('rare-species').value,
-    notes: document.getElementById('survey-notes').value
+  const assessment = {
+    name: assessmentName,
+    date: new Date().toLocaleDateString(),
+    score: score,
+    categoryScores: categoryScores,
+    answers: appState.currentAnswers,
+    timestamp: new Date().getTime(),
+    location: location
   };
+
+  // Save photos if any were uploaded
+  if (appState.currentPhotos.length > 0) {
+    assessment.photos = [...appState.currentPhotos];
+  }
+
+  appState.previousAssessments.push(assessment);
+  localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
   
-  // Get current assessment
-  const currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
-  if (currentAssessment) {
-    currentAssessment.survey = survey;
+  renderHistory();
+  alert(`Assessment "${assessmentName}" saved successfully!`);
+}
+
+// Render assessment history
+function renderHistory() {
+  if (appState.previousAssessments.length === 0) {
+    elements.historyContainer.innerHTML = `
+      <div style="text-align: center; padding: 20px; color: var(--text-light);">
+        <i class="fas fa-history fa-2x" style="margin-bottom: 10px;"></i>
+        <p>No previous assessments found</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // Create array with original indices before sorting
+  const assessmentsWithIndices = appState.previousAssessments.map((assessment, index) => ({
+    ...assessment,
+    originalIndex: index
+  }));
+  
+  // Sort by date (newest first)
+  const sortedAssessments = [...assessmentsWithIndices].sort((a, b) => b.timestamp - a.timestamp);
+  
+  let html = sortedAssessments.map((assessment) => {
+    let scoreClass;
+    if (assessment.score < 40) {
+      scoreClass = 'score-low';
+    } else if (assessment.score < 70) {
+      scoreClass = 'score-medium';
+    } else {
+      scoreClass = 'score-high';
+    }
+    
+    // Check if this assessment has photos
+    const hasPhotos = assessment.photos && assessment.photos.length > 0;
+    
+    return `
+      <div class="history-item" data-index="${assessment.originalIndex}">
+        <div>
+          <strong>${assessment.name || 'Unnamed Assessment'}</strong>
+          <div class="small">${assessment.date} • ${assessment.location || 'No location'}</div>
+          ${hasPhotos ? '<span class="badge"><i class="fas fa-camera"></i> Photos</span>' : ''}
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="history-score ${scoreClass}">${assessment.score}/100</div>
+          <button class="delete-assessment-btn" data-index="${assessment.originalIndex}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  elements.historyContainer.innerHTML = html;
+  
+  // Add click handlers to view historical assessments
+  document.querySelectorAll('.history-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+      // Don't trigger if clicking on delete button
+      if (!e.target.closest('.delete-assessment-btn')) {
+        const index = parseInt(this.getAttribute('data-index'));
+        viewHistoricalAssessment(index);
+      }
+    });
+  });
+  
+  // Add click handlers to delete buttons
+  document.querySelectorAll('.delete-assessment-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const index = parseInt(this.getAttribute('data-index'));
+      deleteAssessment(index);
+    });
+  });
+}
+
+function deleteAssessment(index) {
+  if (confirm('Are you sure you want to delete this assessment? This cannot be undone.')) {
+    // Remove the assessment from the array
+    appState.previousAssessments.splice(index, 1);
+    
+    // Update localStorage
     localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
     
-    // Show success message
-    alert('Biodiversity survey saved successfully!');
-  } else {
-    alert('Error: No current assessment found to attach survey to.');
+    // Re-render history
+    renderHistory();
+    
+    // If we deleted the last assessment, reset the trend chart
+    if (appState.previousAssessments.length === 0) {
+      if (appState.charts.trend) {
+        appState.charts.trend.destroy();
+        document.getElementById('trend-chart-container').innerHTML = '<canvas id="trend-chart"></canvas>';
+      }
+    } else {
+      // Otherwise update the trend chart
+      createTrendChart();
+    }
+    
+    // Show confirmation
+    alert('Assessment deleted successfully');
   }
-} // <-- This closing brace was missing
+}
+
+// Export function
+function exportAssessments() {
+  if (appState.previousAssessments.length === 0) {
+    alert("No assessments to export");
+    return;
+  }
+
+  const data = JSON.stringify(appState.previousAssessments);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `EcoVision_Assessments_${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Import function
+function importAssessments(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const importedAssessments = JSON.parse(event.target.result);
+      
+      if (!Array.isArray(importedAssessments)) {
+        throw new Error("Invalid file format");
+      }
+
+      if (confirm(`Import ${importedAssessments.length} assessment(s)? This will add them to your current assessments.`)) {
+        appState.previousAssessments.push(...importedAssessments);
+        localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
+        renderHistory();
+        createTrendChart();
+        alert("Assessments imported successfully!");
+      }
+    } catch (error) {
+      console.error("Import error:", error);
+      alert("Error importing assessments. Please check the file format.");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = ''; // Reset file input
+}
 
 // View historical assessment details
 function viewHistoricalAssessment(index) {
   const assessment = appState.previousAssessments[index];
-  // ... rest of the function
-}
+  if (!assessment) return;
 
-      // Display the assessment
-      elements.scoreDisplay.textContent = assessment.score;
-      
-      let scoreClass;
-      if (assessment.score < 40) {
-        scoreClass = 'score-low';
-      } else if (assessment.score < 70) {
-        scoreClass = 'score-medium';
-      } else {
-        scoreClass = 'score-high';
-      }
-      
-      elements.scoreDisplay.className = `score-display ${scoreClass}`;
-      elements.scoreDescription.textContent = 
-        assessment.score < 40 ? ecoData.scoreDescriptions.low :
-        assessment.score < 70 ? ecoData.scoreDescriptions.medium :
-        ecoData.scoreDescriptions.high;
-      
-      // Update location if exists
-      if (assessment.location) {
-        elements.locationInput.value = assessment.location;
-        geocodeLocation(assessment.location);
-      } else {
-        elements.locationInput.value = '';
-        elements.mapPlaceholder.classList.remove('hidden');
-      }
-      
-      // Create radar chart for historical data
-      createRadarChart(assessment.categoryScores);
-      
-      // Switch to summary tab
-      switchTab({ target: document.querySelector('.tab[data-tab="summary"]') });
-      
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  // Update basic info
+  document.getElementById('assessment-name').value = assessment.name || '';
+  elements.locationInput.value = assessment.location || '';
+  
+  // Update score display
+  elements.scoreDisplay.textContent = assessment.score;
+  let scoreClass = assessment.score < 40 ? 'score-low' : 
+                   assessment.score < 70 ? 'score-medium' : 'score-high';
+  elements.scoreDisplay.className = `score-display ${scoreClass}`;
+  elements.scoreDescription.textContent = 
+    assessment.score < 40 ? ecoData.scoreDescriptions.low :
+    assessment.score < 70 ? ecoData.scoreDescriptions.medium :
+    ecoData.scoreDescriptions.high;
+
+  // Update map if location exists
+  if (assessment.location) {
+    geocodeLocation(assessment.location);
+  } else {
+    elements.mapPlaceholder.classList.remove('hidden');
+  }
+
+  // Show photos if they exist
+  if (assessment.photos && assessment.photos.length > 0) {
+    elements.photoPreview.innerHTML = '';
+    assessment.photos.forEach(photo => {
+      renderPhotoThumbnail(photo);
+    });
+  } else {
+    elements.photoPreview.innerHTML = '';
+  }
+
+  // Show survey data if it exists
+  if (assessment.survey) {
+    document.getElementById('survey-date').value = assessment.survey.date || '';
+    document.getElementById('plant-species').value = assessment.survey.plantSpecies || '';
+    document.getElementById('animal-species').value = assessment.survey.animalSpecies || '';
+    document.getElementById('dominant-species').value = assessment.survey.dominantSpecies || '';
+    document.getElementById('rare-species').value = assessment.survey.rareSpecies || '';
+    document.getElementById('survey-notes').value = assessment.survey.notes || '';
+  }
+
+  // Create radar chart
+  createRadarChart(assessment.categoryScores);
+  
+  // Switch to summary tab but keep other data loaded
+  switchTab({ target: document.querySelector('.tab[data-tab="summary"]') });
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
     // Save biodiversity survey
     function saveSurvey() {
