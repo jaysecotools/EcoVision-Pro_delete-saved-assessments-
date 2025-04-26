@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>🌍 EcoVision Pro - Advanced Ecosystem Assessment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
       --primary: #2e7d32;
@@ -68,6 +70,67 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
+    }
+
+    /* Welcome Screen Styles */
+    .welcome-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+      text-align: center;
+    }
+
+    .welcome-title {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .welcome-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+      width: 100%;
+    }
+
+    .welcome-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px;
+      width: 300px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .welcome-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-card i {
+      font-size: 3rem;
+      color: var(--primary);
+    }
+
+    .welcome-card h3 {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .welcome-card p {
+      color: var(--text-light);
     }
     
     /* Map Container Styles */
@@ -435,37 +498,37 @@
       height: 0;
     }
     
-/* Icons for dark toggle slider */
-.toggle-switch .sun::after,
-.toggle-switch .moon::after {
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  transition: opacity 0.3s;
-}
+    /* Icons for dark toggle slider */
+    .toggle-switch .sun::after,
+    .toggle-switch .moon::after {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      transition: opacity 0.3s;
+    }
 
-.toggle-switch .sun::after {
-  content: "\f185"; /* Sun icon */
-  left: 10px;
-  opacity: 1;
-}
+    .toggle-switch .sun::after {
+      content: "\f185"; /* Sun icon */
+      left: 10px;
+      opacity: 1;
+    }
 
-.toggle-switch .moon::after {
-  content: "\f186"; /* Moon icon */
-  right: 10px;
-  opacity: 0.5;
-}
+    .toggle-switch .moon::after {
+      content: "\f186"; /* Moon icon */
+      right: 10px;
+      opacity: 0.5;
+    }
 
-.toggle-switch input:checked + .slider .sun::after {
-  opacity: 0.5;
-}
+    .toggle-switch input:checked + .slider .sun::after {
+      opacity: 0.5;
+    }
 
-.toggle-switch input:checked + .slider .moon::after {
-  opacity: 1;
-}
+    .toggle-switch input:checked + .slider .moon::after {
+      opacity: 1;
+    }
 
     .slider {
       position: absolute;
@@ -500,13 +563,13 @@
       transform: translateX(30px);
     }
     
-.toggle-switch input:checked + .slider {
-  background-color: var(--primary);
-}
+    .toggle-switch input:checked + .slider {
+      background-color: var(--primary);
+    }
 
-.toggle-switch input:checked + .slider:before {
-  transform: translateX(40px);
-}
+    .toggle-switch input:checked + .slider:before {
+      transform: translateX(40px);
+    }
 
     .location-input {
       display: flex;
@@ -557,39 +620,94 @@
       opacity: 1;
     }
     
-.delete-assessment-btn {
-  transition: var(--transition);
-  opacity: 0.7;
-  padding: 5px;
-  border-radius: 50%;
-}
+    .delete-assessment-btn {
+      transition: var(--transition);
+      opacity: 0.7;
+      padding: 5px;
+      border-radius: 50%;
+    }
 
-.delete-assessment-btn:hover {
-  opacity: 1;
-  background-color: rgba(211, 47, 47, 0.1);
-  transform: scale(1.1);
-}
+    .delete-assessment-btn:hover {
+      opacity: 1;
+      background-color: rgba(211, 47, 47, 0.1);
+      transform: scale(1.1);
+    }
 
-.history-item:hover .delete-assessment-btn {
-  display: block;
-}
+    .history-item:hover .delete-assessment-btn {
+      display: block;
+    }
 
-/* Add to your CSS */
-#assessment-name {
-  margin-bottom: 15px;
-}
+    /* Add to your CSS */
+    #assessment-name {
+      margin-bottom: 15px;
+    }
 
-.assessment-header {
+    .assessment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .assessment-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 15px;
+  z-index: 1000;
 }
 
-.assessment-title {
-  font-size: 1.3rem;
-  font-weight: 600;
+.modal-content {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 25px;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-light);
+}
+
+.close-modal:hover {
+  color: var(--danger);
+}
+
+.modal-body {
+  padding: 15px 0;
+}
+
+.modal-body h3 {
   color: var(--primary);
+  margin-top: 20px;
+  border-bottom: 1px solid var(--primary-light);
+  padding-bottom: 5px;
+}
+
+.modal-body ul, .modal-body ol {
+  margin-left: 20px;
+  margin-bottom: 15px;
 }
 
     /* Photo upload styles */
@@ -679,6 +797,15 @@
       .map-container {
         height: 250px;
       }
+
+      .welcome-cards {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .welcome-card {
+        width: 100%;
+      }
     }
     
     /* Animation classes */
@@ -718,25 +845,176 @@
     .leaflet-popup-content-wrapper {
       border-radius: var(--radius) !important;
     }
+
+    /* PDF Export Styles */
+    .pdf-container {
+      padding: 20px;
+      background-color: white;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .pdf-header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #2e7d32;
+      padding-bottom: 20px;
+    }
+
+    .pdf-logo {
+      font-size: 2rem;
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+
+    .pdf-section {
+      margin-bottom: 20px;
+      page-break-inside: avoid;
+    }
+
+    .pdf-section-title {
+      background-color: #f0f0f0;
+      padding: 8px 12px;
+      border-left: 4px solid #2e7d32;
+      margin-bottom: 15px;
+    }
+
+    .pdf-score {
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .pdf-score-low { background-color: #ffebee; color: #d32f2f; }
+    .pdf-score-medium { background-color: #fff8e1; color: #ed6c02; }
+    .pdf-score-high { background-color: #e8f5e9; color: #2e7d32; }
+
+    .pdf-photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .pdf-photo {
+      border: 1px solid #ddd;
+      padding: 5px;
+      text-align: center;
+    }
+
+    .pdf-photo img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .pdf-photo-caption {
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+
+    .pdf-footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- Welcome Screen -->
+  <div class="container" id="welcome-screen">
     <header>
       <div class="logo">
         <i class="fas fa-leaf fa-2x" style="color: var(--primary);"></i>
         <h1>EcoVision Pro</h1>
       </div>
       <div class="controls">
-<label class="toggle-switch">
-  <input type="checkbox" id="theme-toggle">
-  <span class="slider">
-    <span class="sun"></span> <!-- Empty now -->
-    <span class="moon"></span> <!-- Empty now -->
-  </span>
-</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="theme-toggle">
+          <span class="slider">
+            <span class="sun"></span>
+            <span class="moon"></span>
+          </span>
+        </label>
+      </div>
+    </header>
+    
+    <div class="welcome-container">
+      <h1 class="welcome-title">
+        <i class="fas fa-leaf"></i> Ecosystem Health Assessment
+      </h1>
+      <p style="max-width: 600px; margin: 0 auto;">
+        Welcome to EcoVision Pro, your comprehensive tool for evaluating and tracking ecosystem health. 
+        Create new assessments, review past data, or import existing assessments to get started.
+      </p>
+      
+      <div class="welcome-cards">
+        <div class="welcome-card" id="new-assessment-card">
+          <i class="fas fa-clipboard-check"></i>
+          <h3>New Assessment</h3>
+          <p>Start a new ecosystem health assessment to evaluate your local environment.</p>
+        </div>
+        
+        <div class="welcome-card" id="view-assessments-card">
+          <i class="fas fa-history"></i>
+          <h3>View Assessments</h3>
+          <p>Review and analyze your previous ecosystem assessments and trends.</p>
+        </div>
+        
+        <div class="welcome-card" id="import-data-card">
+          <i class="fas fa-file-import"></i>
+          <h3>Import Data</h3>
+          <p>Import previously exported assessments to continue your analysis.</p>
+        </div>
+
+  
+  <div class="welcome-card" id="user-guide-card">
+    <i class="fas fa-book"></i>
+    <h3>User Guide</h3>
+    <p>How to use EcoVision Pro</p>
+  </div>
+  
+  <div class="welcome-card" id="terms-of-use-card">
+    <i class="fas fa-file-contract"></i>
+    <h3>Terms of Use</h3>
+    <p>Legal information</p>
+  </div>
+</div>
+    </div>
+  </div>
+
+  <!-- Assessment Screen (Hidden Initially) -->
+  <div class="container hidden" id="app-container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-leaf fa-2x" style="color: var(--primary);"></i>
+        <h1>EcoVision Pro</h1>
+      </div>
+      <div class="controls">
+        <label class="toggle-switch">
+          <input type="checkbox" id="theme-toggle">
+          <span class="slider">
+            <span class="sun"></span>
+            <span class="moon"></span>
+          </span>
+        </label>
+        <button id="export-file-btn" class="btn btn-outline">
+          <i class="fas fa-save"></i> Save to File
+        </button>
         <button id="print-btn" class="btn btn-outline">
           <i class="fas fa-print"></i> Print
+        </button>
+        <button id="export-pdf-btn" class="btn btn-outline">
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button id="back-btn" class="btn btn-outline">
+          <i class="fas fa-arrow-left"></i> Back
         </button>
       </div>
     </header>
@@ -746,6 +1024,11 @@
         <i class="fas fa-clipboard-check"></i> Ecosystem Health Assessment
       </h2>
       <p>Complete this assessment to evaluate the health of your local ecosystem. Answer each question based on your observations.</p>
+      
+      <div class="survey-question">
+        <label for="assessment-name">Assessment Name</label>
+        <input type="text" id="assessment-name" class="form-control" placeholder="Give this assessment a descriptive name">
+      </div>
       
       <div class="progress-container">
         <div class="progress-bar">
@@ -781,11 +1064,6 @@
         <div class="tab" data-tab="photos">Photo Documentation</div>
       </div>
       
-<div class="survey-question">
-  <label for="assessment-name">Assessment Name</label>
-  <input type="text" id="assessment-name" class="form-control" placeholder="Give this assessment a name">
-</div>
-
       <div class="tab-content active" id="summary-tab">
         <div class="feedback">
           <h3><i class="fas fa-info-circle"></i> Overview</h3>
@@ -831,15 +1109,15 @@
         
         <div id="history-container"></div>
         
-<div style="text-align: center; margin: 20px 0;">
-  <button id="export-btn" class="btn btn-outline">
-    <i class="fas fa-file-export"></i> Export Assessments
-  </button>
-  <button id="import-btn" class="btn btn-outline">
-    <i class="fas fa-file-import"></i> Import Assessments
-  </button>
-  <input type="file" id="import-file" accept=".json" style="display: none;">
-</div>
+        <div style="text-align: center; margin: 20px 0;">
+          <button id="export-btn" class="btn btn-outline">
+            <i class="fas fa-file-export"></i> Export All
+          </button>
+          <button id="import-btn" class="btn btn-outline">
+            <i class="fas fa-file-import"></i> Import
+          </button>
+          <input type="file" id="import-file" accept=".json" style="display: none;">
+        </div>
 
         <div class="visualization" id="trend-chart-container">
           <canvas id="trend-chart"></canvas>
@@ -927,7 +1205,9 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Enhanced data model
+    // =============================================
+    // DATA MODEL
+    // =============================================
     const ecoData = {
       questions: [
         {
@@ -1079,7 +1359,9 @@
       }
     };
 
-    // App state
+    // =============================================
+    // APP STATE
+    // =============================================
     let appState = {
       currentAnswers: {},
       previousAssessments: [],
@@ -1090,11 +1372,20 @@
       marker: null,
       geocoder: null,
       currentPhotos: [],
-      photoCounter: 0
+      photoCounter: 0,
+      currentAssessmentId: null,
+      viewMode: null // 'new', 'history', or 'import'
     };
 
-    // DOM elements
+    // =============================================
+    // DOM ELEMENTS
+    // =============================================
     const elements = {
+      welcomeScreen: document.getElementById('welcome-screen'),
+      appContainer: document.getElementById('app-container'),
+      newAssessmentCard: document.getElementById('new-assessment-card'),
+      viewAssessmentsCard: document.getElementById('view-assessments-card'),
+      importDataCard: document.getElementById('import-data-card'),
       questionsContainer: document.getElementById('questions-container'),
       resultContainer: document.getElementById('result-container'),
       assessmentCard: document.getElementById('assessment-card'),
@@ -1113,6 +1404,9 @@
       saveSurveyBtn: document.getElementById('save-survey-btn'),
       savePhotosBtn: document.getElementById('save-photos-btn'),
       printBtn: document.getElementById('print-btn'),
+      exportPdfBtn: document.getElementById('export-pdf-btn'),
+      exportFileBtn: document.getElementById('export-file-btn'),
+      backBtn: document.getElementById('back-btn'),
       themeToggle: document.getElementById('theme-toggle'),
       tabs: document.querySelectorAll('.tab'),
       tabContents: document.querySelectorAll('.tab-content'),
@@ -1124,20 +1418,57 @@
       uploadArea: document.getElementById('upload-area'),
       photoUpload: document.getElementById('photo-upload'),
       photoPreview: document.getElementById('photo-preview'),
-      photoCaption: document.getElementById('photo-caption')
+      photoCaption: document.getElementById('photo-caption'),
+      assessmentName: document.getElementById('assessment-name'),
+      importFile: document.getElementById('import-file'),
+      exportBtn: document.getElementById('export-btn'),
+      importBtn: document.getElementById('import-btn')
     };
 
-    // Initialize the application
+    // =============================================
+    // INITIALIZATION
+    // =============================================
     function initApp() {
       loadPreviousAssessments();
-      renderQuestions();
       setupEventListeners();
-      checkProgress();
-      initMap();
       initTheme();
     }
 
-    // Initialize theme
+    function showWelcomeScreen() {
+      elements.welcomeScreen.classList.remove('hidden');
+      elements.appContainer.classList.add('hidden');
+    }
+
+    function showAppScreen(viewMode = 'new') {
+      elements.welcomeScreen.classList.add('hidden');
+      elements.appContainer.classList.remove('hidden');
+      appState.viewMode = viewMode;
+
+      // Initialize based on view mode
+      if (viewMode === 'new') {
+        startNewAssessment();
+      } else if (viewMode === 'history') {
+        showAssessmentHistory();
+      }
+    }
+
+    function startNewAssessment() {
+      resetAssessment();
+      renderQuestions();
+      checkProgress();
+      initMap();
+    }
+
+    function showAssessmentHistory() {
+      elements.assessmentCard.classList.add('hidden');
+      elements.resultContainer.classList.remove('hidden');
+      renderHistory();
+      switchTab({ target: document.querySelector('.tab[data-tab="history"]') });
+    }
+
+    // =============================================
+    // THEME MANAGEMENT
+    // =============================================
     function initTheme() {
       const savedTheme = localStorage.getItem('darkMode');
       if (savedTheme === 'true') {
@@ -1145,22 +1476,28 @@
       } else {
         disableDarkMode();
       }
+      updateThemeToggle();
     }
 
-    // Toggle dark/light theme
+    function updateThemeToggle() {
+      if (elements.themeToggle) {
+        elements.themeToggle.checked = appState.darkMode;
+      }
+    }
+
     function toggleTheme() {
       if (appState.darkMode) {
         disableDarkMode();
       } else {
         enableDarkMode();
       }
+      updateThemeToggle();
     }
 
     function enableDarkMode() {
       document.documentElement.setAttribute('data-theme', 'dark');
       appState.darkMode = true;
       localStorage.setItem('darkMode', 'true');
-      if (elements.themeToggle) elements.themeToggle.checked = true;
       refreshCharts();
     }
 
@@ -1168,29 +1505,28 @@
       document.documentElement.removeAttribute('data-theme');
       appState.darkMode = false;
       localStorage.setItem('darkMode', 'false');
-      if (elements.themeToggle) elements.themeToggle.checked = false;
       refreshCharts();
     }
 
     function refreshCharts() {
-      if (appState.previousAssessments.length > 0) {
+      if (appState.previousAssessments.length > 0 && appState.charts.radar) {
         const lastAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
-        if (appState.charts.radar) {
-          createRadarChart(lastAssessment.categoryScores);
-        }
-        if (appState.charts.trend) {
-          createTrendChart();
-        }
+        createRadarChart(lastAssessment.categoryScores);
+      }
+      if (appState.previousAssessments.length > 0 && appState.charts.trend) {
+        createTrendChart();
       }
     }
 
-    // Initialize Leaflet Map
+    // =============================================
+    // MAP FUNCTIONALITY
+    // =============================================
     function initMap() {
-      const burnieCoords = [-41.0524, 145.9042];
+      const defaultCoords = [-41.0524, 145.9042]; // Default to Burnie, Tasmania
       
       appState.map = L.map('map', {
         zoomControl: false
-      }).setView(burnieCoords, 10);
+      }).setView(defaultCoords, 10);
       
       L.control.zoom({
         position: 'topright'
@@ -1212,7 +1548,7 @@
       });
       
       // Create marker (initially hidden)
-      appState.marker = L.marker(burnieCoords, {
+      appState.marker = L.marker(defaultCoords, {
         icon: greenIcon,
         opacity: 0
       }).addTo(appState.map);
@@ -1228,7 +1564,6 @@
       });
     }
     
-    // Geocode location using OpenStreetMap's Nominatim
     function geocodeLocation(location) {
       if (!location) return;
       
@@ -1261,16 +1596,9 @@
         });
     }
 
-    // Load previous assessments from localStorage
-    function loadPreviousAssessments() {
-      const savedAssessments = localStorage.getItem('ecoAssessments');
-      if (savedAssessments) {
-        appState.previousAssessments = JSON.parse(savedAssessments);
-        renderHistory();
-      }
-    }
-
-    // Render assessment questions
+    // =============================================
+    // ASSESSMENT QUESTIONS
+    // =============================================
     function renderQuestions() {
       let html = '';
       
@@ -1306,78 +1634,655 @@
       });
       
       elements.questionsContainer.innerHTML = html;
+      
+      // If we're editing an existing assessment, restore the answers
+      if (appState.currentAssessmentId !== null) {
+        const assessment = appState.previousAssessments.find(a => a.id === appState.currentAssessmentId);
+        if (assessment) {
+          Object.keys(assessment.answers).forEach(questionId => {
+            const value = assessment.answers[questionId];
+            const radio = document.querySelector(`input[name="${questionId}"][value="${value}"]`);
+            if (radio) {
+              radio.checked = true;
+              appState.currentAnswers[questionId] = value;
+            }
+          });
+          checkProgress();
+        }
+      }
     }
 
-    // Setup event listeners
-    function setupEventListeners() {
+    function checkProgress() {
+      const answered = Object.keys(appState.currentAnswers).length;
+      const total = ecoData.questions.length;
+      const percent = Math.round((answered / total) * 100);
+      
+      elements.progressFill.style.width = `${percent}%`;
+      elements.progressText.textContent = `${percent}% complete (${answered}/${total} questions)`;
+      
+      elements.submitBtn.disabled = answered < total;
+    }
 
-// Add export/import event listeners
-document.getElementById('export-btn').addEventListener('click', exportAssessments);
-document.getElementById('import-btn').addEventListener('click', () => document.getElementById('import-file').click());
-document.getElementById('import-file').addEventListener('change', importAssessments);
+    // =============================================
+    // ASSESSMENT CALCULATION & RESULTS
+    // =============================================
+    function calculateScore() {
+      // Validate assessment name
+      const assessmentName = elements.assessmentName.value.trim();
+      if (!assessmentName) {
+        alert('Please provide a name for this assessment');
+        elements.assessmentName.focus();
+        return;
+      }
 
-      // Radio button changes
-      document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-          const questionId = this.getAttribute('data-question');
-          appState.currentAnswers[questionId] = parseInt(this.value);
-          checkProgress();
+      // Calculate raw score
+      let rawScore = 0;
+      let maxScore = 0;
+      const categoryScores = {};
+      
+      ecoData.questions.forEach(question => {
+        const value = appState.currentAnswers[question.id] || 0;
+        rawScore += value;
+        maxScore += 3;
+        
+        // For radar chart
+        const category = question.text;
+        categoryScores[category] = value;
+      });
+      
+      // Calculate percentage
+      const percentScore = Math.round((rawScore / maxScore) * 100);
+      appState.currentScore = percentScore;
+      
+      // Save assessment
+      saveAssessment(percentScore, categoryScores);
+      
+      // Display results
+      displayResults(percentScore, categoryScores);
+    }
+
+    function displayResults(score, categoryScores) {
+      // Show result container
+      elements.assessmentCard.classList.add('hidden');
+      elements.resultContainer.classList.remove('hidden');
+      
+      // Set score display
+      elements.scoreDisplay.textContent = score;
+      
+      // Determine score category
+      let scoreClass, description;
+      if (score < 40) {
+        scoreClass = 'score-low';
+        description = ecoData.scoreDescriptions.low;
+      } else if (score < 70) {
+        scoreClass = 'score-medium';
+        description = ecoData.scoreDescriptions.medium;
+      } else {
+        scoreClass = 'score-high';
+        description = ecoData.scoreDescriptions.high;
+      }
+      
+      // Apply score class
+      elements.scoreDisplay.className = `score-display ${scoreClass} pulse`;
+      elements.scoreDescription.textContent = description;
+      elements.generalFeedback.textContent = description;
+      
+      // Render recommendations
+      renderRecommendations(score);
+      
+      // Create radar chart
+      createRadarChart(categoryScores);
+      
+      // Create trend chart if we have history
+      if (appState.previousAssessments.length > 0) {
+        createTrendChart();
+      }
+      
+      // Scroll to results
+      elements.resultContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderRecommendations(score) {
+      let recommendations;
+      if (score < 40) {
+        recommendations = ecoData.recommendations.low;
+      } else if (score < 70) {
+        recommendations = ecoData.recommendations.medium;
+      } else {
+        recommendations = ecoData.recommendations.high;
+      }
+      
+      // Render recommendations
+      let html = recommendations.map(rec => `
+        <div class="recommendation">
+          <i class="${rec.icon}"></i>
+          <div>
+            <h4>${rec.title} <span class="badge">${rec.priority} Priority</span></h4>
+            <p>${rec.description}</p>
+            <p class="small"><strong>Timeline:</strong> ${rec.timeline}</p>
+          </div>
+        </div>
+      `).join('');
+      
+      elements.recommendationsContainer.innerHTML = html;
+      
+      // Render timeline
+      const timelineHtml = `
+        <div style="margin-top: 20px;">
+          ${recommendations.map(rec => `
+            <div style="margin-bottom: 15px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span>${rec.title}</span>
+                <span>${rec.timeline}</span>
+              </div>
+              <div style="height: 10px; background-color: #e0e0e0; border-radius: 5px;">
+                <div style="height: 100%; width: ${getTimelineWidth(rec.timeline)}; 
+                     background-color: var(--primary); border-radius: 5px;"></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      
+      elements.timelineContainer.innerHTML = timelineHtml;
+    }
+
+    function getTimelineWidth(timeline) {
+      switch (timeline.toLowerCase()) {
+        case 'immediate': return '20%';
+        case 'within 1 month': return '30%';
+        case 'within 3 months': return '50%';
+        case 'within 6 months': return '70%';
+        case 'next planting season': return '80%';
+        case 'within 1 year': return '90%';
+        case 'ongoing': return '100%';
+        default: return '50%';
+      }
+    }
+
+    // =============================================
+    // DATA VISUALIZATION
+    // =============================================
+    function createRadarChart(categoryScores) {
+      const ctx = document.getElementById('radar-chart').getContext('2d');
+      
+      // Destroy previous chart if exists
+      if (appState.charts.radar) {
+        appState.charts.radar.destroy();
+      }
+      
+      const labels = Object.keys(categoryScores);
+      const data = Object.values(categoryScores);
+      
+      appState.charts.radar = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Category Scores',
+            data: data,
+            backgroundColor: 'rgba(46, 125, 50, 0.2)',
+            borderColor: 'rgba(46, 125, 50, 1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(46, 125, 50, 1)',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          scales: {
+            r: {
+              angleLines: {
+                display: true
+              },
+              suggestedMin: 0,
+              suggestedMax: 3,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${context.raw}/3`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function createTrendChart() {
+      const ctx = document.getElementById('trend-chart').getContext('2d');
+      
+      // Destroy previous chart if exists
+      if (appState.charts.trend) {
+        appState.charts.trend.destroy();
+      }
+      
+      // Prepare data
+      const assessments = [...appState.previousAssessments].reverse();
+      const labels = assessments.map(a => a.date);
+      const scores = assessments.map(a => a.score);
+      const locations = assessments.map(a => a.location || 'Unspecified');
+      
+      appState.charts.trend = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Ecosystem Health Score',
+            data: scores,
+            backgroundColor: 'rgba(46, 125, 50, 0.2)',
+            borderColor: 'rgba(46, 125, 50, 1)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                afterLabel: function(context) {
+                  const index = context.dataIndex;
+                  return `Location: ${locations[index]}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // =============================================
+    // ASSESSMENT MANAGEMENT
+    // =============================================
+    function loadPreviousAssessments() {
+      const savedAssessments = localStorage.getItem('ecoAssessments');
+      if (savedAssessments) {
+        try {
+          const parsed = JSON.parse(savedAssessments);
+          // Ensure all assessments have an ID (for backward compatibility)
+          appState.previousAssessments = parsed.map(assessment => {
+            if (!assessment.id) {
+              assessment.id = `assessment-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+            }
+            return assessment;
+          });
+        } catch (e) {
+          console.error("Error loading assessments:", e);
+          appState.previousAssessments = [];
+        }
+      }
+    }
+
+    function saveAssessment(score, categoryScores) {
+      const assessmentName = elements.assessmentName.value.trim() || 
+                           `Assessment ${appState.previousAssessments.length + 1}`;
+      const location = elements.locationInput.value.trim();
+
+      // Create or update assessment
+      let assessment;
+      if (appState.currentAssessmentId) {
+        // Update existing assessment
+        assessment = appState.previousAssessments.find(a => a.id === appState.currentAssessmentId);
+        if (assessment) {
+          assessment.name = assessmentName;
+          assessment.score = score;
+          assessment.categoryScores = categoryScores;
+          assessment.answers = {...appState.currentAnswers};
+          assessment.location = location;
+          assessment.timestamp = Date.now();
+          assessment.date = new Date().toLocaleDateString();
+        }
+      } else {
+        // Create new assessment
+        assessment = {
+          id: `assessment-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          name: assessmentName,
+          date: new Date().toLocaleDateString(),
+          score: score,
+          categoryScores: categoryScores,
+          answers: {...appState.currentAnswers},
+          timestamp: Date.now(),
+          location: location
+        };
+        appState.previousAssessments.push(assessment);
+      }
+
+      // Save photos if any were uploaded
+      if (appState.currentPhotos.length > 0) {
+        if (!assessment.photos) assessment.photos = [];
+        assessment.photos.push(...appState.currentPhotos);
+      }
+
+      localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
+      
+      renderHistory();
+      appState.currentAssessmentId = assessment.id;
+      
+      // Show success message
+      alert(`Assessment "${assessmentName}" saved successfully!`);
+    }
+
+    function renderHistory() {
+      if (appState.previousAssessments.length === 0) {
+        elements.historyContainer.innerHTML = `
+          <div style="text-align: center; padding: 20px; color: var(--text-light);">
+            <i class="fas fa-history fa-2x" style="margin-bottom: 10px;"></i>
+            <p>No previous assessments found</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Sort by date (newest first)
+      const sortedAssessments = [...appState.previousAssessments].sort((a, b) => b.timestamp - a.timestamp);
+      
+      let html = sortedAssessments.map((assessment) => {
+        let scoreClass;
+        if (assessment.score < 40) {
+          scoreClass = 'score-low';
+        } else if (assessment.score < 70) {
+          scoreClass = 'score-medium';
+        } else {
+          scoreClass = 'score-high';
+        }
+        
+        // Check if this assessment has photos
+        const hasPhotos = assessment.photos && assessment.photos.length > 0;
+        
+        return `
+          <div class="history-item" data-id="${assessment.id}">
+            <div>
+              <strong>${assessment.name || 'Unnamed Assessment'}</strong>
+              <div class="small">${assessment.date} • ${assessment.location || 'No location'}</div>
+              ${hasPhotos ? '<span class="badge"><i class="fas fa-camera"></i> Photos</span>' : ''}
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="history-score ${scoreClass}">${assessment.score}/100</div>
+              <button class="delete-assessment-btn" data-id="${assessment.id}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      elements.historyContainer.innerHTML = html;
+      
+      // Add click handlers to view historical assessments
+      document.querySelectorAll('.history-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          // Don't trigger if clicking on delete button
+          if (!e.target.closest('.delete-assessment-btn')) {
+            const id = this.getAttribute('data-id');
+            viewHistoricalAssessment(id);
+          }
         });
       });
       
-      // Submit button
-      elements.submitBtn.addEventListener('click', calculateScore);
-      
-      // New assessment button
-      elements.newAssessmentBtn.addEventListener('click', resetAssessment);
-      
-      // Save survey button
-      elements.saveSurveyBtn.addEventListener('click', saveSurvey);
-      
-      // Save photos button
-      elements.savePhotosBtn.addEventListener('click', savePhotos);
-      
-      // Print button
-      elements.printBtn.addEventListener('click', () => window.print());
-      
-      // Theme toggle
-      elements.themeToggle.addEventListener('change', toggleTheme);
-      
-      // Tab switching
-      elements.tabs.forEach(tab => {
-        tab.addEventListener('click', switchTab);
-      });
-      
-      // Save location
-      elements.saveLocationBtn.addEventListener('click', saveLocation);
-      
-      // Photo upload handling
-      elements.uploadArea.addEventListener('click', () => elements.photoUpload.click());
-      
-      // Drag and drop for photos
-      elements.uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        elements.uploadArea.style.backgroundColor = 'rgba(46, 125, 50, 0.2)';
-      });
-      
-      elements.uploadArea.addEventListener('dragleave', () => {
-        elements.uploadArea.style.backgroundColor = '';
-      });
-      
-      elements.uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        elements.uploadArea.style.backgroundColor = '';
-        handlePhotoUpload(e.dataTransfer.files);
-      });
-      
-      // File input change
-      elements.photoUpload.addEventListener('change', (e) => {
-        handlePhotoUpload(e.target.files);
+      // Add click handlers to delete buttons
+      document.querySelectorAll('.delete-assessment-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const id = this.getAttribute('data-id');
+          deleteAssessment(id);
+        });
       });
     }
 
-    // Handle photo uploads
-    function handlePhotoUpload(files) {
+    function deleteAssessment(id) {
+      if (confirm('Are you sure you want to delete this assessment? This cannot be undone.')) {
+        // Remove the assessment from the array
+        appState.previousAssessments = appState.previousAssessments.filter(a => a.id !== id);
+        
+        // If we deleted the current assessment, reset the UI
+        if (appState.currentAssessmentId === id) {
+          resetAssessment();
+        }
+        
+        // Update localStorage
+        localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
+        
+        // Re-render history
+        renderHistory();
+        
+        // If we deleted the last assessment, reset the trend chart
+        if (appState.previousAssessments.length === 0) {
+          if (appState.charts.trend) {
+            appState.charts.trend.destroy();
+            document.getElementById('trend-chart-container').innerHTML = '<canvas id="trend-chart"></canvas>';
+          }
+        } else {
+          // Otherwise update the trend chart
+          createTrendChart();
+        }
+        
+        // Show confirmation
+        alert('Assessment deleted successfully');
+      }
+    }
+
+    function viewHistoricalAssessment(id) {
+      const assessment = appState.previousAssessments.find(a => a.id === id);
+      if (!assessment) return;
+
+      // Set current assessment ID
+      appState.currentAssessmentId = id;
+
+      // Update basic info
+      elements.assessmentName.value = assessment.name || '';
+      elements.locationInput.value = assessment.location || '';
+      
+      // Update score display
+      elements.scoreDisplay.textContent = assessment.score;
+      let scoreClass = assessment.score < 40 ? 'score-low' : 
+                      assessment.score < 70 ? 'score-medium' : 'score-high';
+      elements.scoreDisplay.className = `score-display ${scoreClass}`;
+      elements.scoreDescription.textContent = 
+        assessment.score < 40 ? ecoData.scoreDescriptions.low :
+        assessment.score < 70 ? ecoData.scoreDescriptions.medium :
+        ecoData.scoreDescriptions.high;
+
+      // Update map if location exists
+      if (assessment.location) {
+        geocodeLocation(assessment.location);
+      } else {
+        elements.mapPlaceholder.classList.remove('hidden');
+      }
+
+      // Show photos if they exist
+      if (assessment.photos && assessment.photos.length > 0) {
+        elements.photoPreview.innerHTML = '';
+        assessment.photos.forEach(photo => {
+          renderPhotoThumbnail(photo);
+        });
+      } else {
+        elements.photoPreview.innerHTML = '';
+      }
+
+      // Show survey data if it exists
+      if (assessment.survey) {
+        document.getElementById('survey-date').value = assessment.survey.date || '';
+        document.getElementById('plant-species').value = assessment.survey.plantSpecies || '';
+        document.getElementById('animal-species').value = assessment.survey.animalSpecies || '';
+        document.getElementById('dominant-species').value = assessment.survey.dominantSpecies || '';
+        document.getElementById('rare-species').value = assessment.survey.rareSpecies || '';
+        document.getElementById('survey-notes').value = assessment.survey.notes || '';
+      }
+
+      // Create radar chart
+      createRadarChart(assessment.categoryScores);
+      
+      // Render recommendations
+      renderRecommendations(assessment.score);
+      
+      // Show the assessment card with answers
+      elements.assessmentCard.classList.remove('hidden');
+      elements.resultContainer.classList.remove('hidden');
+      renderQuestions();
+      
+      // Switch to summary tab
+      switchTab({ target: document.querySelector('.tab[data-tab="summary"]') });
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetAssessment() {
+      // Reset state
+      appState.currentAnswers = {};
+      appState.currentPhotos = [];
+      appState.currentAssessmentId = null;
+      appState.currentScore = 0;
+      
+      // Reset UI
+      elements.assessmentCard.classList.remove('hidden');
+      elements.resultContainer.classList.add('hidden');
+      elements.progressFill.style.width = '0%';
+      elements.progressText.textContent = '0% complete';
+      elements.submitBtn.disabled = true;
+      elements.photoPreview.innerHTML = '';
+      elements.photoCaption.value = '';
+      elements.assessmentName.value = `Assessment ${appState.previousAssessments.length + 1}`;
+      elements.locationInput.value = '';
+      
+      // Reset survey fields
+      document.getElementById('survey-date').value = '';
+      document.getElementById('plant-species').value = '';
+      document.getElementById('animal-species').value = '';
+      document.getElementById('dominant-species').value = '';
+      document.getElementById('rare-species').value = '';
+      document.getElementById('survey-notes').value = '';
+      
+      // Uncheck all radio buttons
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.checked = false;
+      });
+      
+      // Reset map
+      elements.mapPlaceholder.classList.remove('hidden');
+      if (appState.marker) appState.marker.setOpacity(0);
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =============================================
+    // FILE-BASED SAVE/LOAD
+    // =============================================
+    function saveAssessmentToFile() {
+      if (appState.previousAssessments.length === 0) {
+        alert("No assessments to save");
+        return;
+      }
+
+      // Create a data structure with version info and assessments
+      const saveData = {
+        version: "1.0",
+        timestamp: new Date().toISOString(),
+        assessments: appState.previousAssessments
+      };
+
+      const data = JSON.stringify(saveData, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `EcoVision_Data_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function loadAssessmentFromFile() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = event => {
+          try {
+            const fileData = JSON.parse(event.target.result);
+            
+            // Validate file structure
+            if (!fileData.assessments || !Array.isArray(fileData.assessments)) {
+              throw new Error("Invalid file format - assessments array missing");
+            }
+
+            // Validate each assessment
+            const isValid = fileData.assessments.every(assessment => {
+              return assessment.hasOwnProperty('score') && 
+                     assessment.hasOwnProperty('answers') &&
+                     assessment.hasOwnProperty('categoryScores');
+            });
+
+            if (!isValid) {
+              throw new Error("Invalid assessment data in file");
+            }
+
+            // Replace current data with loaded data
+            appState.previousAssessments = fileData.assessments.map(assessment => {
+              // Ensure each assessment has an ID
+              if (!assessment.id) {
+                assessment.id = `assessment-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+              }
+              return assessment;
+            });
+
+            localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
+            
+            // Refresh UI
+            renderHistory();
+            createTrendChart();
+            
+            // Show success message
+            alert(`${fileData.assessments.length} assessment(s) loaded successfully!`);
+            
+            // Switch to history view
+            showAppScreen('history');
+            
+          } catch (error) {
+            console.error("Error loading file:", error);
+            alert(`Error loading file: ${error.message}`);
+          }
+        };
+        reader.onerror = () => {
+          alert("Error reading file");
+        };
+        reader.readAsText(file);
+      };
+      
+      input.click();
+    }
+
+    // =============================================
+    // PHOTO MANAGEMENT
+    // =============================================  
+      function handlePhotoUpload(files) {
       if (!files || files.length === 0) return;
       
       // Limit to 10 photos per assessment
@@ -1402,7 +2307,7 @@ document.getElementById('import-file').addEventListener('change', importAssessme
             id: photoId,
             data: e.target.result,
             file: file,
-            caption: '',
+            caption: elements.photoCaption.value.trim(),
             timestamp: new Date().toISOString()
           };
           
@@ -1416,7 +2321,6 @@ document.getElementById('import-file').addEventListener('change', importAssessme
       elements.photoUpload.value = '';
     }
 
-    // Render photo thumbnail in preview area
     function renderPhotoThumbnail(photo) {
       const thumbnail = document.createElement('div');
       thumbnail.style.position = 'relative';
@@ -1443,7 +2347,6 @@ document.getElementById('import-file').addEventListener('change', importAssessme
       thumbnail.addEventListener('click', () => viewPhoto(photo));
     }
 
-    // Remove photo from current uploads
     function removePhoto(photoId) {
       appState.currentPhotos = appState.currentPhotos.filter(p => p.id !== photoId);
       
@@ -1452,7 +2355,6 @@ document.getElementById('import-file').addEventListener('change', importAssessme
       appState.currentPhotos.forEach(photo => renderPhotoThumbnail(photo));
     }
 
-    // View photo in larger view
     function viewPhoto(photo) {
       // Create modal overlay
       const modal = document.createElement('div');
@@ -1511,18 +2413,24 @@ document.getElementById('import-file').addEventListener('change', importAssessme
       document.body.appendChild(modal);
     }
 
-    // Save photos to current assessment
     function savePhotos() {
-      // Update all photos with current caption
+      // Update all photos with current caption if they don't have one
       const caption = elements.photoCaption.value.trim();
       appState.currentPhotos.forEach(photo => {
-        if (!photo.caption) {
+        if (!photo.caption && caption) {
           photo.caption = caption;
         }
       });
       
       // Get current assessment
-      const currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
+      let currentAssessment;
+      if (appState.currentAssessmentId) {
+        currentAssessment = appState.previousAssessments.find(a => a.id === appState.currentAssessmentId);
+      } else {
+        // If no current assessment (shouldn't happen), use the last one
+        currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
+      }
+
       if (currentAssessment) {
         if (!currentAssessment.photos) {
           currentAssessment.photos = [];
@@ -1544,493 +2452,9 @@ document.getElementById('import-file').addEventListener('change', importAssessme
       }
     }
 
-    // Check progress and enable/disable submit button
-    function checkProgress() {
-      const answered = Object.keys(appState.currentAnswers).length;
-      const total = ecoData.questions.length;
-      const percent = Math.round((answered / total) * 100);
-      
-      elements.progressFill.style.width = `${percent}%`;
-      elements.progressText.textContent = `${percent}% complete (${answered}/${total} questions)`;
-      
-      elements.submitBtn.disabled = answered < total;
-    }
-
-    // Calculate assessment score
-    function calculateScore() {
-      // Calculate raw score
-      let rawScore = 0;
-      let maxScore = 0;
-      const categoryScores = {};
-      
-      ecoData.questions.forEach(question => {
-        const value = appState.currentAnswers[question.id] || 0;
-        rawScore += value;
-        maxScore += 3;
-        
-        // For radar chart
-        const category = question.text;
-        categoryScores[category] = value;
-      });
-      
-      // Calculate percentage
-      const percentScore = Math.round((rawScore / maxScore) * 100);
-      appState.currentScore = percentScore;
-      
-      // Save assessment
-      saveAssessment(percentScore, categoryScores);
-      
-      // Display results
-      displayResults(percentScore, categoryScores);
-    }
-
-    // Display assessment results
-    function displayResults(score, categoryScores) {
-      // Show result container
-      elements.assessmentCard.classList.add('hidden');
-      elements.resultContainer.classList.remove('hidden');
-      
-      // Set score display
-      elements.scoreDisplay.textContent = score;
-      
-      // Determine score category
-      let scoreClass, description;
-      if (score < 40) {
-        scoreClass = 'score-low';
-        description = ecoData.scoreDescriptions.low;
-      } else if (score < 70) {
-        scoreClass = 'score-medium';
-        description = ecoData.scoreDescriptions.medium;
-      } else {
-        scoreClass = 'score-high';
-        description = ecoData.scoreDescriptions.high;
-      }
-      
-      // Apply score class
-      elements.scoreDisplay.className = `score-display ${scoreClass} pulse`;
-      elements.scoreDescription.textContent = description;
-      elements.generalFeedback.textContent = description;
-      
-      // Render recommendations
-      renderRecommendations(score);
-      
-      // Create radar chart
-      createRadarChart(categoryScores);
-      
-      // Create trend chart if we have history
-      if (appState.previousAssessments.length > 0) {
-        createTrendChart();
-      }
-      
-      // Scroll to results
-      elements.resultContainer.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Render recommendations based on score
-    function renderRecommendations(score) {
-      let recommendations;
-      if (score < 40) {
-        recommendations = ecoData.recommendations.low;
-      } else if (score < 70) {
-        recommendations = ecoData.recommendations.medium;
-      } else {
-        recommendations = ecoData.recommendations.high;
-      }
-      
-      // Render recommendations
-      let html = recommendations.map(rec => `
-        <div class="recommendation">
-          <i class="${rec.icon}"></i>
-          <div>
-            <h4>${rec.title} <span class="badge">${rec.priority} Priority</span></h4>
-            <p>${rec.description}</p>
-            <p class="small"><strong>Timeline:</strong> ${rec.timeline}</p>
-          </div>
-        </div>
-      `).join('');
-      
-      elements.recommendationsContainer.innerHTML = html;
-      
-      // Render timeline
-      const timelineHtml = `
-        <div style="margin-top: 20px;">
-          ${recommendations.map(rec => `
-            <div style="margin-bottom: 15px;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span>${rec.title}</span>
-                <span>${rec.timeline}</span>
-              </div>
-              <div style="height: 10px; background-color: #e0e0e0; border-radius: 5px;">
-                <div style="height: 100%; width: ${getTimelineWidth(rec.timeline)}; 
-                     background-color: var(--primary); border-radius: 5px;"></div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
-      
-      elements.timelineContainer.innerHTML = timelineHtml;
-    }
-
-    // Helper function for timeline visualization
-    function getTimelineWidth(timeline) {
-      switch (timeline.toLowerCase()) {
-        case 'immediate': return '20%';
-        case 'within 1 month': return '30%';
-        case 'within 3 months': return '50%';
-        case 'within 6 months': return '70%';
-        case 'next planting season': return '80%';
-        case 'within 1 year': return '90%';
-        case 'ongoing': return '100%';
-        default: return '50%';
-      }
-    }
-
-    // Create radar chart for category scores
-    function createRadarChart(categoryScores) {
-      const ctx = document.getElementById('radar-chart').getContext('2d');
-      
-      // Destroy previous chart if exists
-      if (appState.charts.radar) {
-        appState.charts.radar.destroy();
-      }
-      
-      const labels = Object.keys(categoryScores);
-      const data = Object.values(categoryScores);
-      
-      appState.charts.radar = new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Category Scores',
-            data: data,
-            backgroundColor: 'rgba(46, 125, 50, 0.2)',
-            borderColor: 'rgba(46, 125, 50, 1)',
-            borderWidth: 2,
-            pointBackgroundColor: 'rgba(46, 125, 50, 1)',
-            pointRadius: 4
-          }]
-        },
-        options: {
-          scales: {
-            r: {
-              angleLines: {
-                display: true
-              },
-              suggestedMin: 0,
-              suggestedMax: 3,
-              ticks: {
-                stepSize: 1
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return `${context.dataset.label}: ${context.raw}/3`;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-
-    // Create trend chart for historical data
-    function createTrendChart() {
-      const ctx = document.getElementById('trend-chart').getContext('2d');
-      
-      // Destroy previous chart if exists
-      if (appState.charts.trend) {
-        appState.charts.trend.destroy();
-      }
-      
-      // Prepare data
-      const assessments = [...appState.previousAssessments].reverse();
-      const labels = assessments.map(a => a.date);
-      const scores = assessments.map(a => a.score);
-      const locations = assessments.map(a => a.location || 'Unspecified');
-      
-      appState.charts.trend = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Ecosystem Health Score',
-            data: scores,
-            backgroundColor: 'rgba(46, 125, 50, 0.2)',
-            borderColor: 'rgba(46, 125, 50, 1)',
-            borderWidth: 2,
-            tension: 0.3,
-            fill: true
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              ticks: {
-                callback: function(value) {
-                  return value + '%';
-                }
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                afterLabel: function(context) {
-                  const index = context.dataIndex;
-                  return `Location: ${locations[index]}`;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-
-// // Save current assessment
-function saveAssessment(score, categoryScores) {
-  const assessmentName = document.getElementById('assessment-name').value.trim() || 
-                        `Assessment ${appState.previousAssessments.length + 1}`;
-  const location = elements.locationInput.value.trim();
-
-  const assessment = {
-    name: assessmentName,
-    date: new Date().toLocaleDateString(),
-    score: score,
-    categoryScores: categoryScores,
-    answers: appState.currentAnswers,
-    timestamp: new Date().getTime(),
-    location: location
-  };
-
-  // Save photos if any were uploaded
-  if (appState.currentPhotos.length > 0) {
-    assessment.photos = [...appState.currentPhotos];
-  }
-
-  appState.previousAssessments.push(assessment);
-  localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
-  
-  renderHistory();
-  alert(`Assessment "${assessmentName}" saved successfully!`);
-}
-
-// Render assessment history
-function renderHistory() {
-  if (appState.previousAssessments.length === 0) {
-    elements.historyContainer.innerHTML = `
-      <div style="text-align: center; padding: 20px; color: var(--text-light);">
-        <i class="fas fa-history fa-2x" style="margin-bottom: 10px;"></i>
-        <p>No previous assessments found</p>
-      </div>
-    `;
-    return;
-  }
-  
-  // Create array with original indices before sorting
-  const assessmentsWithIndices = appState.previousAssessments.map((assessment, index) => ({
-    ...assessment,
-    originalIndex: index
-  }));
-  
-  // Sort by date (newest first)
-  const sortedAssessments = [...assessmentsWithIndices].sort((a, b) => b.timestamp - a.timestamp);
-  
-  let html = sortedAssessments.map((assessment) => {
-    let scoreClass;
-    if (assessment.score < 40) {
-      scoreClass = 'score-low';
-    } else if (assessment.score < 70) {
-      scoreClass = 'score-medium';
-    } else {
-      scoreClass = 'score-high';
-    }
-    
-    // Check if this assessment has photos
-    const hasPhotos = assessment.photos && assessment.photos.length > 0;
-    
-    return `
-      <div class="history-item" data-index="${assessment.originalIndex}">
-        <div>
-          <strong>${assessment.name || 'Unnamed Assessment'}</strong>
-          <div class="small">${assessment.date} • ${assessment.location || 'No location'}</div>
-          ${hasPhotos ? '<span class="badge"><i class="fas fa-camera"></i> Photos</span>' : ''}
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div class="history-score ${scoreClass}">${assessment.score}/100</div>
-          <button class="delete-assessment-btn" data-index="${assessment.originalIndex}">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-    `;
-  }).join('');
-  
-  elements.historyContainer.innerHTML = html;
-  
-  // Add click handlers to view historical assessments
-  document.querySelectorAll('.history-item').forEach(item => {
-    item.addEventListener('click', function(e) {
-      // Don't trigger if clicking on delete button
-      if (!e.target.closest('.delete-assessment-btn')) {
-        const index = parseInt(this.getAttribute('data-index'));
-        viewHistoricalAssessment(index);
-      }
-    });
-  });
-  
-  // Add click handlers to delete buttons
-  document.querySelectorAll('.delete-assessment-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const index = parseInt(this.getAttribute('data-index'));
-      deleteAssessment(index);
-    });
-  });
-}
-
-function deleteAssessment(index) {
-  if (confirm('Are you sure you want to delete this assessment? This cannot be undone.')) {
-    // Remove the assessment from the array
-    appState.previousAssessments.splice(index, 1);
-    
-    // Update localStorage
-    localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
-    
-    // Re-render history
-    renderHistory();
-    
-    // If we deleted the last assessment, reset the trend chart
-    if (appState.previousAssessments.length === 0) {
-      if (appState.charts.trend) {
-        appState.charts.trend.destroy();
-        document.getElementById('trend-chart-container').innerHTML = '<canvas id="trend-chart"></canvas>';
-      }
-    } else {
-      // Otherwise update the trend chart
-      createTrendChart();
-    }
-    
-    // Show confirmation
-    alert('Assessment deleted successfully');
-  }
-}
-
-// Export function
-function exportAssessments() {
-  if (appState.previousAssessments.length === 0) {
-    alert("No assessments to export");
-    return;
-  }
-
-  const data = JSON.stringify(appState.previousAssessments);
-  const blob = new Blob([data], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `EcoVision_Assessments_${new Date().toISOString().split('T')[0]}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-// Import function
-function importAssessments(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    try {
-      const importedAssessments = JSON.parse(event.target.result);
-      
-      if (!Array.isArray(importedAssessments)) {
-        throw new Error("Invalid file format");
-      }
-
-      if (confirm(`Import ${importedAssessments.length} assessment(s)? This will add them to your current assessments.`)) {
-        appState.previousAssessments.push(...importedAssessments);
-        localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
-        renderHistory();
-        createTrendChart();
-        alert("Assessments imported successfully!");
-      }
-    } catch (error) {
-      console.error("Import error:", error);
-      alert("Error importing assessments. Please check the file format.");
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = ''; // Reset file input
-}
-
-// View historical assessment details
-function viewHistoricalAssessment(index) {
-  const assessment = appState.previousAssessments[index];
-  if (!assessment) return;
-
-  // Update basic info
-  document.getElementById('assessment-name').value = assessment.name || '';
-  elements.locationInput.value = assessment.location || '';
-  
-  // Update score display
-  elements.scoreDisplay.textContent = assessment.score;
-  let scoreClass = assessment.score < 40 ? 'score-low' : 
-                   assessment.score < 70 ? 'score-medium' : 'score-high';
-  elements.scoreDisplay.className = `score-display ${scoreClass}`;
-  elements.scoreDescription.textContent = 
-    assessment.score < 40 ? ecoData.scoreDescriptions.low :
-    assessment.score < 70 ? ecoData.scoreDescriptions.medium :
-    ecoData.scoreDescriptions.high;
-
-  // Update map if location exists
-  if (assessment.location) {
-    geocodeLocation(assessment.location);
-  } else {
-    elements.mapPlaceholder.classList.remove('hidden');
-  }
-
-  // Show photos if they exist
-  if (assessment.photos && assessment.photos.length > 0) {
-    elements.photoPreview.innerHTML = '';
-    assessment.photos.forEach(photo => {
-      renderPhotoThumbnail(photo);
-    });
-  } else {
-    elements.photoPreview.innerHTML = '';
-  }
-
-  // Show survey data if it exists
-  if (assessment.survey) {
-    document.getElementById('survey-date').value = assessment.survey.date || '';
-    document.getElementById('plant-species').value = assessment.survey.plantSpecies || '';
-    document.getElementById('animal-species').value = assessment.survey.animalSpecies || '';
-    document.getElementById('dominant-species').value = assessment.survey.dominantSpecies || '';
-    document.getElementById('rare-species').value = assessment.survey.rareSpecies || '';
-    document.getElementById('survey-notes').value = assessment.survey.notes || '';
-  }
-
-  // Create radar chart
-  createRadarChart(assessment.categoryScores);
-  
-  // Switch to summary tab but keep other data loaded
-  switchTab({ target: document.querySelector('.tab[data-tab="summary"]') });
-  
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-    // Save biodiversity survey
+    // =============================================
+    // BIODIVERSITY SURVEY
+    // =============================================
     function saveSurvey() {
       const survey = {
         date: document.getElementById('survey-date').value || new Date().toISOString().split('T')[0],
@@ -2042,7 +2466,14 @@ function viewHistoricalAssessment(index) {
       };
       
       // Get current assessment
-      const currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
+      let currentAssessment;
+      if (appState.currentAssessmentId) {
+        currentAssessment = appState.previousAssessments.find(a => a.id === appState.currentAssessmentId);
+      } else {
+        // If no current assessment (shouldn't happen), use the last one
+        currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
+      }
+
       if (currentAssessment) {
         currentAssessment.survey = survey;
         localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
@@ -2054,51 +2485,231 @@ function viewHistoricalAssessment(index) {
       }
     }
 
-    // Save location information
-    function saveLocation() {
-      const location = elements.locationInput.value.trim();
-      if (!location) return;
+    // =============================================
+    // PDF EXPORT
+    // =============================================
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
       
       // Get current assessment
-      const currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
+      let assessment;
+      if (appState.currentAssessmentId) {
+        assessment = appState.previousAssessments.find(a => a.id === appState.currentAssessmentId);
+      } else if (appState.previousAssessments.length > 0) {
+        assessment = appState.previousAssessments[appState.previousAssessments.length - 1];
+      } else {
+        alert("No assessment data available to export");
+        return;
+      }
+
+      // Create a temporary div for PDF content
+      const pdfContainer = document.createElement('div');
+      pdfContainer.className = 'pdf-container';
+      pdfContainer.style.position = 'absolute';
+      pdfContainer.style.left = '-9999px';
+      document.body.appendChild(pdfContainer);
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'pdf-header';
+      header.innerHTML = `
+        <div class="pdf-logo">
+          <i class="fas fa-leaf"></i> EcoVision Pro
+        </div>
+        <h1>${assessment.name || 'Ecosystem Assessment'}</h1>
+        <p>${assessment.date} • ${assessment.location || 'Location not specified'}</p>
+      `;
+      pdfContainer.appendChild(header);
+
+      // Score section
+      const scoreSection = document.createElement('div');
+      scoreSection.className = 'pdf-section';
+      let scoreClass = 'pdf-score-';
+      let scoreDescription = '';
+      
+      if (assessment.score < 40) {
+        scoreClass += 'low';
+        scoreDescription = ecoData.scoreDescriptions.low;
+      } else if (assessment.score < 70) {
+        scoreClass += 'medium';
+        scoreDescription = ecoData.scoreDescriptions.medium;
+      } else {
+        scoreClass += 'high';
+        scoreDescription = ecoData.scoreDescriptions.high;
+      }
+      
+      scoreSection.innerHTML = `
+        <div class="pdf-section-title">Assessment Score</div>
+        <div class="${scoreClass}">${assessment.score}/100</div>
+        <p>${scoreDescription}</p>
+      `;
+      pdfContainer.appendChild(scoreSection);
+
+      // Category scores
+      const categoriesSection = document.createElement('div');
+      categoriesSection.className = 'pdf-section';
+      let categoriesHtml = '<div class="pdf-section-title">Category Scores</div><table style="width:100%;border-collapse:collapse;">';
+      
+      for (const [category, score] of Object.entries(assessment.categoryScores)) {
+        categoriesHtml += `
+          <tr style="border-bottom:1px solid #ddd;">
+            <td style="padding:8px;">${category}</td>
+            <td style="padding:8px;text-align:right;">${score}/3</td>
+          </tr>
+        `;
+      }
+      
+      categoriesHtml += '</table>';
+      categoriesSection.innerHTML = categoriesHtml;
+      pdfContainer.appendChild(categoriesSection);
+
+      // Recommendations
+      const recommendationsSection = document.createElement('div');
+      recommendationsSection.className = 'pdf-section';
+      let recommendationsHtml = '<div class="pdf-section-title">Recommendations</div>';
+      
+      let recommendations;
+      if (assessment.score < 40) {
+        recommendations = ecoData.recommendations.low;
+      } else if (assessment.score < 70) {
+        recommendations = ecoData.recommendations.medium;
+      } else {
+        recommendations = ecoData.recommendations.high;
+      }
+      
+      recommendations.forEach(rec => {
+        recommendationsHtml += `
+          <div style="margin-bottom:15px;">
+            <h4 style="margin:0 0 5px 0;">${rec.title}</h4>
+            <p style="margin:0 0 5px 0;">${rec.description}</p>
+            <p style="margin:0;font-size:0.9em;"><strong>Priority:</strong> ${rec.priority} • <strong>Timeline:</strong> ${rec.timeline}</p>
+          </div>
+        `;
+      });
+      
+      recommendationsSection.innerHTML = recommendationsHtml;
+      pdfContainer.appendChild(recommendationsSection);
+
+      // Survey data if available
+      if (assessment.survey) {
+        const surveySection = document.createElement('div');
+        surveySection.className = 'pdf-section';
+        surveySection.innerHTML = `
+          <div class="pdf-section-title">Biodiversity Survey</div>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr style="border-bottom:1px solid #ddd;">
+              <td style="padding:8px;">Survey Date</td>
+              <td style="padding:8px;">${assessment.survey.date || 'Not specified'}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #ddd;">
+              <td style="padding:8px;">Native Plant Species</td>
+              <td style="padding:8px;">${assessment.survey.plantSpecies || 'Not recorded'}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #ddd;">
+              <td style="padding:8px;">Animal Species Observed</td>
+              <td style="padding:8px;">${assessment.survey.animalSpecies || 'Not recorded'}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #ddd;">
+              <td style="padding:8px;">Dominant Species</td>
+              <td style="padding:8px;">${assessment.survey.dominantSpecies || 'Not recorded'}</td>
+            </tr>
+            <tr style="border-bottom:1px solid #ddd;">
+              <td style="padding:8px;">Rare/Endangered Species</td>
+              <td style="padding:8px;">${assessment.survey.rareSpecies || 'Not recorded'}</td>
+            </tr>
+          </table>
+          ${assessment.survey.notes ? `<p><strong>Notes:</strong> ${assessment.survey.notes}</p>` : ''}
+        `;
+        pdfContainer.appendChild(surveySection);
+      }
+
+      // Photos if available
+      if (assessment.photos && assessment.photos.length > 0) {
+        const photosSection = document.createElement('div');
+        photosSection.className = 'pdf-section';
+        let photosHtml = '<div class="pdf-section-title">Photo Documentation</div><div class="pdf-photo-grid">';
+        
+        assessment.photos.forEach(photo => {
+          photosHtml += `
+            <div class="pdf-photo">
+              <img src="${photo.data}" style="max-width:100%;height:auto;">
+              <div class="pdf-photo-caption">${photo.caption || 'No caption'}</div>
+            </div>
+          `;
+        });
+        
+        photosHtml += '</div>';
+        photosSection.innerHTML = photosHtml;
+        pdfContainer.appendChild(photosSection);
+      }
+
+      // Footer
+      const footer = document.createElement('div');
+      footer.className = 'pdf-footer';
+      footer.innerHTML = `
+        <p>Generated by EcoVision Pro on ${new Date().toLocaleDateString()}</p>
+        <p>https://ecovisionpro.example.com</p>
+      `;
+      pdfContainer.appendChild(footer);
+
+      // Convert to PDF
+      html2canvas(pdfContainer).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 295; // A4 height in mm
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          doc.addPage();
+          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        // Save the PDF
+        doc.save(`EcoVision_Assessment_${assessment.name || 'Untitled'}.pdf`);
+        
+        // Clean up
+        document.body.removeChild(pdfContainer);
+      });
+    }
+
+    // =============================================
+    // UTILITY FUNCTIONS
+    // =============================================
+    function saveLocation() {
+      const location = elements.locationInput.value.trim();
+      if (!location) {
+        alert('Please enter a location before saving');
+        return;
+      }
+      
+      // Get current assessment
+      let currentAssessment;
+      if (appState.currentAssessmentId) {
+        currentAssessment = appState.previousAssessments.find(a => a.id === appState.currentAssessmentId);
+      } else if (appState.previousAssessments.length > 0) {
+        currentAssessment = appState.previousAssessments[appState.previousAssessments.length - 1];
+      }
+
       if (currentAssessment) {
         currentAssessment.location = location;
         localStorage.setItem('ecoAssessments', JSON.stringify(appState.previousAssessments));
         
         // Update map
         geocodeLocation(location);
+        alert('Location saved successfully!');
+      } else {
+        alert('Error: No current assessment found to save location to.');
       }
     }
 
-    // Reset assessment to start new one
-    function resetAssessment() {
-      // Reset state
-      appState.currentAnswers = {};
-      appState.currentPhotos = [];
-      
-      // Reset UI
-      elements.assessmentCard.classList.remove('hidden');
-      elements.resultContainer.classList.add('hidden');
-      elements.progressFill.style.width = '0%';
-      elements.progressText.textContent = '0% complete';
-      elements.submitBtn.disabled = true;
-      elements.photoPreview.innerHTML = '';
-      elements.photoCaption.value = '';
-      
-      // Uncheck all radio buttons
-      document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.checked = false;
-      });
-      
-      // Reset map
-      elements.mapPlaceholder.classList.remove('hidden');
-      appState.marker.setOpacity(0);
-      
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Switch between tabs
     function switchTab(e) {
       const tab = e.target.getAttribute('data-tab');
       
@@ -2122,8 +2733,160 @@ function viewHistoricalAssessment(index) {
       }
     }
 
-    // Initialize the app when DOM is loaded
+    // =============================================
+    // EVENT LISTENERS
+    // =============================================
+    function setupEventListeners() {
+      // Welcome screen buttons
+      elements.newAssessmentCard.addEventListener('click', () => showAppScreen('new'));
+      elements.viewAssessmentsCard.addEventListener('click', () => showAppScreen('history'));
+      elements.importDataCard.addEventListener('click', loadAssessmentFromFile);
+
+      // Back button
+      elements.backBtn.addEventListener('click', showWelcomeScreen);
+
+      // Theme toggle - now works on all pages
+      document.addEventListener('change', function(e) {
+        if (e.target.matches('#theme-toggle')) {
+          toggleTheme();
+        }
+      });
+
+      // Radio button changes
+      document.addEventListener('change', function(e) {
+        if (e.target.matches('input[type="radio"]')) {
+          const questionId = e.target.getAttribute('data-question');
+          appState.currentAnswers[questionId] = parseInt(e.target.value);
+          checkProgress();
+        }
+      });
+      
+      // Modal buttons
+document.getElementById('user-guide-card').addEventListener('click', () => {
+  document.getElementById('user-guide-modal').classList.remove('hidden');
+});
+
+document.getElementById('terms-of-use-card').addEventListener('click', () => {
+  document.getElementById('terms-modal').classList.remove('hidden');
+});
+
+// Close modals
+document.querySelectorAll('.close-modal').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.classList.add('hidden');
+    });
+  });
+});
+
+// Close when clicking outside modal
+window.addEventListener('click', (e) => {
+  if (e.target.classList.contains('modal')) {
+    e.target.classList.add('hidden');
+  }
+});
+      
+      // Submit button
+      elements.submitBtn.addEventListener('click', calculateScore);
+      
+      // New assessment button
+      elements.newAssessmentBtn.addEventListener('click', resetAssessment);
+      
+      // Save survey button
+      elements.saveSurveyBtn.addEventListener('click', saveSurvey);
+      
+      // Save photos button
+      elements.savePhotosBtn.addEventListener('click', savePhotos);
+      
+      // Print button
+      elements.printBtn.addEventListener('click', () => window.print());
+      
+      // PDF Export button
+      elements.exportPdfBtn.addEventListener('click', exportToPDF);
+      
+      // File Export button
+      elements.exportFileBtn.addEventListener('click', saveAssessmentToFile);
+      
+      // Tab switching
+      elements.tabs.forEach(tab => {
+        tab.addEventListener('click', switchTab);
+      });
+      
+      // Save location
+      elements.saveLocationBtn.addEventListener('click', saveLocation);
+      
+      // Photo upload handling
+      elements.uploadArea.addEventListener('click', () => elements.photoUpload.click());
+      
+      // Drag and drop for photos
+      elements.uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        elements.uploadArea.style.backgroundColor = 'rgba(46, 125, 50, 0.2)';
+      });
+      
+      elements.uploadArea.addEventListener('dragleave', () => {
+        elements.uploadArea.style.backgroundColor = '';
+      });
+      
+      elements.uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        elements.uploadArea.style.backgroundColor = '';
+        handlePhotoUpload(e.dataTransfer.files);
+      });
+      
+      // File input change
+      elements.photoUpload.addEventListener('change', (e) => {
+        handlePhotoUpload(e.target.files);
+      });
+
+      // Import/Export buttons in history tab
+      elements.exportBtn.addEventListener('click', saveAssessmentToFile);
+      elements.importBtn.addEventListener('click', loadAssessmentFromFile);
+    }
+
+    // =============================================
+    // INITIALIZE THE APP
+    // =============================================
     document.addEventListener('DOMContentLoaded', initApp);
   </script>
+  <!-- User Guide Modal -->
+<div id="user-guide-modal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h2><i class="fas fa-book"></i> EcoVision Pro User Guide</h2>
+    <div class="modal-body">
+      <h3>Getting Started</h3>
+      <ol>
+        <li>Click "New Assessment" to begin</li>
+        <li>Name your assessment</li>
+        <li>Answer all 7 ecosystem questions</li>
+        <li>View your results and recommendations</li>
+      </ol>
+      
+      <h3>Understanding Scores</h3>
+      <ul>
+        <li><strong>0-39 (Red):</strong> Needs improvement</li>
+        <li><strong>40-69 (Orange):</strong> Moderate health</li>
+        <li><strong>70-100 (Green):</strong> Healthy ecosystem</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Terms of Use Modal -->
+<div id="terms-modal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h2><i class="fas fa-file-contract"></i> Terms of Use</h2>
+    <div class="modal-body">
+      <h3>1. Data Privacy</h3>
+      <p>All data is stored locally in your browser.</p>
+      
+      <h3>2. Disclaimer</h3>
+      <p>Results are estimates only, not professional advice.</p>
+    </div>
+  </div>
+</div>
 </body>
-</html>
+    </html>
