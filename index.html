@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🌍 EcoVision Pro - Advanced Ecosystem Assessment</title>
+  <title>🌍 EcoVision Elite - Advanced Ecosystem Assessment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -924,6 +924,55 @@
       border-top: 1px solid #ddd;
       padding-top: 15px;
     }
+
+/* Timeline styling */
+.timeline {
+  margin-top: 20px;
+}
+.timeline-item {
+  display: flex;
+  margin-bottom: 15px;
+  align-items: center;
+}
+.timeline-priority {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-right: 15px;
+  min-width: 80px;
+  text-align: center;
+}
+.timeline-priority.critical {
+  background-color: var(--danger);
+  color: white;
+}
+.timeline-priority.high {
+  background-color: var(--warning);
+  color: var(--text);
+}
+.timeline-priority.medium {
+  background-color: var(--secondary);
+  color: white;
+}
+.timeline-priority.low {
+  background-color: var(--primary-light);
+  color: white;
+}
+.timeline-content {
+  flex: 1;
+}
+.timeline-bar {
+  height: 8px;
+  background-color: var(--primary);
+  border-radius: 4px;
+  margin: 5px 0;
+}
+
+/* Radar chart adjustments */
+#radar-chart {
+  max-height: 400px;
+}
   </style>
 </head>
 <body>
@@ -932,7 +981,7 @@
     <header>
       <div class="logo">
         <i class="fas fa-leaf fa-2x" style="color: var(--primary);"></i>
-        <h1>EcoVision Pro</h1>
+        <h1>EcoVision Elite</h1>
       </div>
       <div class="controls">
         <label class="toggle-switch">
@@ -950,7 +999,7 @@
         <i class="fas fa-leaf"></i> Ecosystem Health Assessment
       </h1>
       <p style="max-width: 600px; margin: 0 auto;">
-        Welcome to EcoVision Pro, your comprehensive tool for evaluating and tracking ecosystem health. 
+        Welcome to EcoVision Elite, your comprehensive tool for evaluating and tracking ecosystem health. 
         Create new assessments, review past data, or import existing assessments to get started.
       </p>
       
@@ -977,7 +1026,7 @@
   <div class="welcome-card" id="user-guide-card">
     <i class="fas fa-book"></i>
     <h3>User Guide</h3>
-    <p>How to use EcoVision Pro</p>
+    <p>How to use EcoVision Elite</p>
   </div>
   
   <div class="welcome-card" id="terms-of-use-card">
@@ -994,7 +1043,7 @@
     <header>
       <div class="logo">
         <i class="fas fa-leaf fa-2x" style="color: var(--primary);"></i>
-        <h1>EcoVision Pro</h1>
+        <h1>EcoVision Elite</h1>
       </div>
       <div class="controls">
         <label class="toggle-switch">
@@ -1279,8 +1328,88 @@
             { value: 2, label: "Moderate", description: "Some pollinator activity but limited" },
             { value: 1, label: "Limited", description: "Few or no pollinators observed" }
           ]
-        }
-      ],
+        },
+    {
+      id: "water-retention",
+      text: "Water retention capacity",
+      description: "Evaluate how well the landscape absorbs and retains water.",
+      options: [
+        { value: 3, label: "Excellent", description: "Good infiltration, minimal runoff, healthy wetlands" },
+        { value: 2, label: "Moderate", description: "Some runoff but with natural drainage patterns" },
+        { value: 1, label: "Poor", description: "Significant runoff, erosion, or drainage issues" }
+      ]
+    },
+    {
+      id: "microbial-activity",
+      text: "Soil microbial activity",
+      description: "Assess signs of healthy soil biology like earthworms and fungal networks.",
+      options: [
+        { value: 3, label: "High", description: "Abundant soil life, fungal networks visible" },
+        { value: 2, label: "Moderate", description: "Some biological activity present" },
+        { value: 1, label: "Low", description: "Little visible soil life, compacted soil" }
+      ]
+    },
+    {
+      id: "carbon-sequestration",
+      text: "Carbon sequestration potential",
+      description: "Evaluate the landscape's ability to store carbon.",
+      options: [
+        { value: 3, label: "High", description: "Diverse perennial vegetation, healthy soils" },
+        { value: 2, label: "Moderate", description: "Some carbon-storing features present" },
+        { value: 1, label: "Low", description: "Mostly annual plants, exposed soil" }
+      ]
+    },
+    {
+      id: "habitat-connectivity",
+      text: "Habitat connectivity",
+      description: "Assess how well wildlife can move between habitat patches.",
+      options: [
+        { value: 3, label: "Excellent", description: "Connected corridors, diverse habitat types" },
+        { value: 2, label: "Moderate", description: "Some connectivity but with barriers" },
+        { value: 1, label: "Poor", description: "Fragmented habitats with little connectivity" }
+      ]
+    },
+    {
+      id: "disturbance-regime",
+      text: "Natural disturbance regime",
+      description: "Evaluate if natural processes like fire/flood are functioning properly.",
+      options: [
+        { value: 3, label: "Balanced", description: "Natural disturbances occur at appropriate intervals" },
+        { value: 2, label: "Altered", description: "Some suppression or unnatural frequency" },
+        { value: 1, label: "Disrupted", description: "Complete suppression or extreme alteration" }
+      ]
+    },
+    {
+      id: "keystone-species",
+      text: "Keystone species presence",
+      description: "Assess presence of species critical to ecosystem function.",
+      options: [
+        { value: 3, label: "Present", description: "Key species present and functioning normally" },
+        { value: 2, label: "Some", description: "Some key species present but populations low" },
+        { value: 1, label: "Absent", description: "Key species missing or non-functional" }
+      ]
+    },
+    {
+      id: "cultural-significance",
+      text: "Cultural/indigenous significance",
+      description: "Evaluate preservation of culturally important ecological features.",
+      options: [
+        { value: 3, label: "Protected", description: "Cultural knowledge actively maintained" },
+        { value: 2, label: "Some", description: "Some cultural features remain" },
+        { value: 1, label: "Lost", description: "Cultural connections largely lost" }
+      ]
+    },
+    {
+      id: "climate-resilience",
+      text: "Climate resilience indicators",
+      description: "Assess signs of ecosystem adapting to climate change.",
+      options: [
+        { value: 3, label: "Resilient", description: "Diverse age classes, genetic diversity" },
+        { value: 2, label: "Moderate", description: "Some adaptive capacity present" },
+        { value: 1, label: "Vulnerable", description: "Little evidence of adaptation" }
+      ]
+    }
+  ],
       recommendations: {
         low: [
           {
@@ -1303,9 +1432,23 @@
             priority: "Medium",
             timeline: "Next planting season",
             icon: "fas fa-seedling"
-          }
-        ],
-        medium: [
+          },
+    {
+      title: "Water retention improvements",
+      description: "Implement swales, rain gardens, or wetland restoration to improve water retention.",
+      priority: "High",
+      timeline: "Within 6 months",
+      icon: "fas fa-tint"
+    },
+    {
+      title: "Soil biology enhancement",
+      description: "Apply compost teas, fungal inoculants, or organic matter to boost microbial activity.",
+      priority: "High",
+      timeline: "Next growing season",
+      icon: "fas fa-bacteria"
+    }
+  ],
+  medium: [
           {
             title: "Targeted invasive removal",
             description: "Remove invasive species in prioritized areas to protect native biodiversity.",
@@ -1326,8 +1469,22 @@
             priority: "Low",
             timeline: "Within 1 year",
             icon: "fas fa-users"
-          }
-        ],
+          },
+    {
+      title: "Carbon farming practices",
+      description: "Implement agroforestry, cover cropping, or reduced tillage to increase carbon sequestration.",
+      priority: "Medium",
+      timeline: "Within 1 year",
+      icon: "fas fa-cloud"
+    },
+    {
+      title: "Wildlife corridor creation",
+      description: "Plant native vegetation strips to connect habitat patches.",
+      priority: "Medium",
+      timeline: "Within 2 years",
+      icon: "fas fa-route"
+    }
+  ],
         high: [
           {
             title: "Maintenance monitoring",
@@ -1349,14 +1506,28 @@
             priority: "Medium",
             timeline: "Within 1 year",
             icon: "fas fa-chalkboard-teacher"
-          }
-        ]
-      },
-      scoreDescriptions: {
-        low: "Ecosystem is in poor health and requires immediate intervention to prevent further degradation.",
-        medium: "Ecosystem shows signs of stress but has recovery potential with proper management.",
-        high: "Ecosystem is in good health with balanced biodiversity and minimal threats."
-      }
+          },
+    {
+      title: "Keystone species reintroduction",
+      description: "Consider reintroducing missing keystone species where appropriate.",
+      priority: "Low",
+      timeline: "Long-term planning",
+      icon: "fas fa-paw"
+    },
+    {
+      title: "Cultural knowledge integration",
+      description: "Work with indigenous communities to restore traditional ecological knowledge.",
+      priority: "Medium",
+      timeline: "Ongoing",
+      icon: "fas fa-people-arrows"
+    }
+  ]
+},
+scoreDescriptions: {
+  low: "Ecosystem shows significant degradation across multiple indicators. Comprehensive restoration needed.",
+  medium: "Ecosystem is functioning but shows stress in key areas. Targeted improvements recommended.",
+  high: "Ecosystem is healthy and resilient. Focus on maintenance and monitoring."
+}
     };
 
     // =============================================
@@ -1652,16 +1823,23 @@
       }
     }
 
-    function checkProgress() {
-      const answered = Object.keys(appState.currentAnswers).length;
-      const total = ecoData.questions.length;
-      const percent = Math.round((answered / total) * 100);
-      
-      elements.progressFill.style.width = `${percent}%`;
-      elements.progressText.textContent = `${percent}% complete (${answered}/${total} questions)`;
-      
-      elements.submitBtn.disabled = answered < total;
-    }
+function checkProgress() {
+  const answered = Object.keys(appState.currentAnswers).length;
+  const total = ecoData.questions.length;
+  const percent = Math.round((answered / total) * 100);
+  
+  elements.progressFill.style.width = `${percent}%`;
+  elements.progressText.textContent = `${percent}% complete (${answered}/${total} questions)`;
+  
+  // Change button text when nearing completion
+  if (percent >= 80) {
+    elements.submitBtn.innerHTML = '<i class="fas fa-calculator"></i> Almost Done!';
+  } else {
+    elements.submitBtn.innerHTML = '<i class="fas fa-calculator"></i> Calculate Score';
+  }
+  
+  elements.submitBtn.disabled = answered < total;
+}
 
     // =============================================
     // ASSESSMENT CALCULATION & RESULTS
@@ -1743,49 +1921,75 @@
     }
 
     function renderRecommendations(score) {
-      let recommendations;
-      if (score < 40) {
-        recommendations = ecoData.recommendations.low;
-      } else if (score < 70) {
-        recommendations = ecoData.recommendations.medium;
-      } else {
-        recommendations = ecoData.recommendations.high;
-      }
-      
-      // Render recommendations
-      let html = recommendations.map(rec => `
+  let recommendations;
+  if (score < 40) {
+    recommendations = [...ecoData.recommendations.low];
+    // Add critical actions for low scores
+    recommendations.unshift({
+      title: "URGENT: Ecosystem Triage",
+      description: "Immediate intervention needed to prevent irreversible damage.",
+      priority: "Critical",
+      timeline: "Immediate",
+      icon: "fas fa-exclamation-triangle"
+    });
+  } else if (score < 70) {
+    recommendations = ecoData.recommendations.medium;
+  } else {
+    recommendations = ecoData.recommendations.high;
+  }
+  
+  // Group by priority for better organization
+  const groupedRecs = {
+    Critical: [],
+    High: [],
+    Medium: [],
+    Low: []
+  };
+  
+  recommendations.forEach(rec => {
+    groupedRecs[rec.priority].push(rec);
+  });
+  
+  // Render grouped recommendations
+  let html = '';
+  Object.entries(groupedRecs).forEach(([priority, recs]) => {
+    if (recs.length > 0) {
+      html += `<h4>${priority} Priority Actions</h4>`;
+      html += recs.map(rec => `
         <div class="recommendation">
           <i class="${rec.icon}"></i>
           <div>
-            <h4>${rec.title} <span class="badge">${rec.priority} Priority</span></h4>
+            <h4>${rec.title}</h4>
             <p>${rec.description}</p>
             <p class="small"><strong>Timeline:</strong> ${rec.timeline}</p>
           </div>
         </div>
       `).join('');
-      
-      elements.recommendationsContainer.innerHTML = html;
-      
-      // Render timeline
-      const timelineHtml = `
-        <div style="margin-top: 20px;">
-          ${recommendations.map(rec => `
-            <div style="margin-bottom: 15px;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span>${rec.title}</span>
-                <span>${rec.timeline}</span>
-              </div>
-              <div style="height: 10px; background-color: #e0e0e0; border-radius: 5px;">
-                <div style="height: 100%; width: ${getTimelineWidth(rec.timeline)}; 
-                     background-color: var(--primary); border-radius: 5px;"></div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
-      
-      elements.timelineContainer.innerHTML = timelineHtml;
     }
+  });
+  
+  elements.recommendationsContainer.innerHTML = html;
+  
+  // Enhanced timeline visualization
+  const timelineHtml = `
+    <div class="timeline">
+      ${recommendations.map(rec => `
+        <div class="timeline-item">
+          <div class="timeline-priority ${rec.priority.toLowerCase()}">
+            ${rec.priority}
+          </div>
+          <div class="timeline-content">
+            <h5>${rec.title}</h5>
+            <div class="timeline-bar" style="width: ${getTimelineWidth(rec.timeline)}"></div>
+            <span>${rec.timeline}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  
+  elements.timelineContainer.innerHTML = timelineHtml;
+}
 
     function getTimelineWidth(timeline) {
       switch (timeline.toLowerCase()) {
@@ -1800,71 +2004,81 @@
       }
     }
 
-    // =============================================
-    // DATA VISUALIZATION
-    // =============================================
-    function createRadarChart(categoryScores) {
-      const ctx = document.getElementById('radar-chart').getContext('2d');
-      
-      // Destroy previous chart if exists
-      if (appState.charts.radar) {
-        appState.charts.radar.destroy();
-      }
-      
-      const labels = Object.keys(categoryScores);
-      const data = Object.values(categoryScores);
-      
-      appState.charts.radar = new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Category Scores',
-            data: data,
-            backgroundColor: 'rgba(46, 125, 50, 0.2)',
-            borderColor: 'rgba(46, 125, 50, 1)',
-            borderWidth: 2,
-            pointBackgroundColor: 'rgba(46, 125, 50, 1)',
-            pointRadius: 4
-          }]
-        },
-        options: {
-          scales: {
-            r: {
-              angleLines: {
-                display: true
-              },
-              suggestedMin: 0,
-              suggestedMax: 3,
-              ticks: {
-                stepSize: 1
-              }
-            }
+// =============================================
+// DATA VISUALIZATION
+// =============================================
+function createRadarChart(categoryScores) {
+  const ctx = document.getElementById('radar-chart').getContext('2d');
+  
+  // Destroy previous chart if exists
+  if (appState.charts.radar) {
+    appState.charts.radar.destroy();
+  }
+  
+  const labels = Object.keys(categoryScores);
+  const data = Object.values(categoryScores);
+  
+  appState.charts.radar = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Category Scores',
+        data: data,
+        backgroundColor: 'rgba(46, 125, 50, 0.2)',
+        borderColor: 'rgba(46, 125, 50, 1)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(46, 125, 50, 1)',
+        pointRadius: 4
+      }]
+    },
+    options: {
+      scales: {
+        r: {
+          angleLines: {
+            display: true
           },
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return `${context.dataset.label}: ${context.raw}/3`;
-                }
-              }
+          suggestedMin: 0,
+          suggestedMax: 3,
+          ticks: {
+            stepSize: 1,
+            backdropColor: 'rgba(0, 0, 0, 0)' // Makes the chart more readable with many categories
+          },
+          pointLabels: {
+            font: {
+              size: 10 // Smaller font for more labels
             }
           }
         }
-      });
-    }
-
-    function createTrendChart() {
-      const ctx = document.getElementById('trend-chart').getContext('2d');
-      
-      // Destroy previous chart if exists
-      if (appState.charts.trend) {
-        appState.charts.trend.destroy();
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.raw}/3`;
+            }
+          }
+        }
+      },
+      elements: {
+        line: {
+          tension: 0.1 // Smoother lines for more points
+        }
       }
-      
+    }
+  });
+}
+
+function createTrendChart() {
+  const ctx = document.getElementById('trend-chart').getContext('2d');
+  
+  // Destroy previous chart if exists
+  if (appState.charts.trend) {
+    appState.charts.trend.destroy();
+  }      
       // Prepare data
       const assessments = [...appState.previousAssessments].reverse();
       const labels = assessments.map(a => a.date);
@@ -2515,7 +2729,7 @@
       header.className = 'pdf-header';
       header.innerHTML = `
         <div class="pdf-logo">
-          <i class="fas fa-leaf"></i> EcoVision Pro
+          <i class="fas fa-leaf"></i> EcoVision Elite
         </div>
         <h1>${assessment.name || 'Ecosystem Assessment'}</h1>
         <p>${assessment.date} • ${assessment.location || 'Location not specified'}</p>
@@ -2648,7 +2862,7 @@
       const footer = document.createElement('div');
       footer.className = 'pdf-footer';
       footer.innerHTML = `
-        <p>Generated by EcoVision Pro on ${new Date().toLocaleDateString()}</p>
+        <p>Generated by EcoVision Elite on ${new Date().toLocaleDateString()}</p>
         <p>https://ecovisionpro.example.com</p>
       `;
       pdfContainer.appendChild(footer);
@@ -2854,7 +3068,7 @@ window.addEventListener('click', (e) => {
 <div id="user-guide-modal" class="modal hidden">
   <div class="modal-content">
     <span class="close-modal">&times;</span>
-    <h2><i class="fas fa-book"></i> EcoVision Pro User Guide</h2>
+    <h2><i class="fas fa-book"></i> EcoVision Elite User Guide</h2>
     <div class="modal-body">
       <h3>Getting Started</h3>
       <ol>
