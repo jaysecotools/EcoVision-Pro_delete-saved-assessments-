@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -772,6 +772,85 @@
       width: 100%;
     }
     
+    /* Photo Gallery Styles */
+    .photo-gallery {
+      margin-top: 30px;
+      border-top: 1px solid var(--primary-light);
+      padding-top: 20px;
+    }
+
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      aspect-ratio: 4/3;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .gallery-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+
+    .empty-gallery {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-light);
+    }
+
+    .empty-gallery i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--primary-light);
+    }
+
+    /* Enhanced Photo Modal */
+    .modal-photo-container {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .modal-photo-caption {
+      background-color: var(--card-bg);
+      padding: 15px;
+      border-radius: var(--radius);
+      margin-top: 15px;
+    }
+
+    /* Make sure modal is properly centered */
+    .modal-content {
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
     @media (max-width: 768px) {
       .container {
         padding: 10px;
@@ -805,6 +884,11 @@
 
       .welcome-card {
         width: 100%;
+      }
+
+      /* Responsive gallery */
+      .gallery-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       }
     }
     
@@ -1240,6 +1324,12 @@
             </button>
           </div>
         </div>
+        
+        <!-- New gallery section -->
+        <div id="assessment-gallery" class="photo-gallery hidden">
+          <h4>Previously Uploaded Photos</h4>
+          <div class="gallery-container" id="gallery-container"></div>
+        </div>
       </div>
       
       <div style="text-align: center; margin-top: 30px;">
@@ -1593,7 +1683,9 @@ scoreDescriptions: {
       assessmentName: document.getElementById('assessment-name'),
       importFile: document.getElementById('import-file'),
       exportBtn: document.getElementById('export-btn'),
-      importBtn: document.getElementById('import-btn')
+      importBtn: document.getElementById('import-btn'),
+      galleryContainer: document.getElementById('gallery-container'),
+      assessmentGallery: document.getElementById('assessment-gallery')
     };
 
     // =============================================
@@ -2329,8 +2421,10 @@ function createTrendChart() {
         assessment.photos.forEach(photo => {
           renderPhotoThumbnail(photo);
         });
+        renderAssessmentGallery(assessment.photos);
       } else {
         elements.photoPreview.innerHTML = '';
+        document.getElementById('assessment-gallery').classList.add('hidden');
       }
 
       // Show survey data if it exists
@@ -2377,6 +2471,7 @@ function createTrendChart() {
       elements.photoCaption.value = '';
       elements.assessmentName.value = `Assessment ${appState.previousAssessments.length + 1}`;
       elements.locationInput.value = '';
+      document.getElementById('assessment-gallery').classList.add('hidden');
       
       // Reset survey fields
       document.getElementById('survey-date').value = '';
@@ -2496,7 +2591,7 @@ function createTrendChart() {
     // =============================================
     // PHOTO MANAGEMENT
     // =============================================  
-      function handlePhotoUpload(files) {
+    function handlePhotoUpload(files) {
       if (!files || files.length === 0) return;
       
       // Limit to 10 photos per assessment
@@ -2561,6 +2656,36 @@ function createTrendChart() {
       thumbnail.addEventListener('click', () => viewPhoto(photo));
     }
 
+    function renderAssessmentGallery(photos) {
+      const galleryContainer = document.getElementById('gallery-container');
+      galleryContainer.innerHTML = '';
+      
+      if (!photos || photos.length === 0) {
+        galleryContainer.innerHTML = `
+          <div class="empty-gallery">
+            <i class="fas fa-images"></i>
+            <p>No photos uploaded for this assessment</p>
+          </div>
+        `;
+        return;
+      }
+      
+      photos.forEach(photo => {
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        galleryItem.innerHTML = `
+          <img src="${photo.data}" alt="${photo.caption || 'Ecosystem photo'}">
+          ${photo.caption ? `<div class="gallery-caption">${photo.caption}</div>` : ''}
+        `;
+        
+        galleryItem.addEventListener('click', () => viewPhoto(photo));
+        galleryContainer.appendChild(galleryItem);
+      });
+      
+      // Show the gallery section
+      document.getElementById('assessment-gallery').classList.remove('hidden');
+    }
+
     function removePhoto(photoId) {
       appState.currentPhotos = appState.currentPhotos.filter(p => p.id !== photoId);
       
@@ -2570,61 +2695,48 @@ function createTrendChart() {
     }
 
     function viewPhoto(photo) {
-      // Create modal overlay
       const modal = document.createElement('div');
-      modal.style.position = 'fixed';
-      modal.style.top = '0';
-      modal.style.left = '0';
-      modal.style.width = '100%';
-      modal.style.height = '100%';
-      modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
-      modal.style.display = 'flex';
-      modal.style.flexDirection = 'column';
-      modal.style.justifyContent = 'center';
-      modal.style.alignItems = 'center';
-      modal.style.zIndex = '1000';
-      modal.style.padding = '20px';
-      modal.style.boxSizing = 'border-box';
+      modal.className = 'modal';
+      modal.style.zIndex = '2000'; // Higher than other modals
       
-      // Create close button
-      const closeBtn = document.createElement('button');
-      closeBtn.className = 'btn btn-danger';
-      closeBtn.style.position = 'absolute';
-      closeBtn.style.top = '20px';
-      closeBtn.style.right = '20px';
-      closeBtn.innerHTML = '<i class="fas fa-times"></i> Close';
-      closeBtn.addEventListener('click', () => document.body.removeChild(modal));
+      modal.innerHTML = `
+        <div class="modal-content" style="max-width: 90vw; max-height: 90vh;">
+          <span class="close-modal">&times;</span>
+          <div class="modal-photo-container">
+            <img src="${photo.data}" alt="${photo.caption || 'Ecosystem photo'}" 
+                 style="max-width: 100%; max-height: 80vh; object-fit: contain;">
+          </div>
+          ${photo.caption ? `
+            <div class="modal-photo-caption">
+              <h4>Photo Details</h4>
+              <p>${photo.caption}</p>
+              ${photo.timestamp ? `<small>Uploaded: ${new Date(photo.timestamp).toLocaleString()}</small>` : ''}
+            </div>
+          ` : ''}
+        </div>
+      `;
       
-      // Create image container
-      const imgContainer = document.createElement('div');
-      imgContainer.style.maxWidth = '90%';
-      imgContainer.style.maxHeight = '80%';
-      imgContainer.style.display = 'flex';
-      imgContainer.style.justifyContent = 'center';
-      imgContainer.style.alignItems = 'center';
-      
-      // Create image
-      const img = document.createElement('img');
-      img.src = photo.data;
-      img.style.maxWidth = '100%';
-      img.style.maxHeight = '100%';
-      img.style.objectFit = 'contain';
-      
-      // Create caption
-      const caption = document.createElement('div');
-      caption.style.color = 'white';
-      caption.style.marginTop = '15px';
-      caption.style.textAlign = 'center';
-      caption.textContent = photo.caption || 'No caption provided';
-      
-      // Add elements to modal
-      imgContainer.appendChild(img);
-      modal.appendChild(closeBtn);
-      modal.appendChild(imgContainer);
-      modal.appendChild(caption);
-      
-      // Add to document
       document.body.appendChild(modal);
+      
+      // Close modal
+      modal.querySelector('.close-modal').addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+      
+      // Close when clicking outside
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal);
+        }
+      });
+      
+      // Add keyboard navigation
+      document.addEventListener('keydown', function handleKeyDown(e) {
+        if (e.key === 'Escape') {
+          document.body.removeChild(modal);
+          document.removeEventListener('keydown', handleKeyDown);
+        }
+      });
     }
 
     function savePhotos() {
@@ -2661,6 +2773,9 @@ function createTrendChart() {
         appState.currentPhotos = [];
         elements.photoPreview.innerHTML = '';
         elements.photoCaption.value = '';
+        
+        // Update gallery view
+        renderAssessmentGallery(currentAssessment.photos);
       } else {
         alert('Error: No current assessment found to attach photos to.');
       }
@@ -2936,15 +3051,28 @@ function createTrendChart() {
         content.classList.remove('active');
         if (content.id === `${tab}-tab`) {
           content.classList.add('active');
+          
+          // Special handling for photos tab
+          if (tab === 'photos') {
+            // Show gallery if viewing historical assessment with photos
+            if (appState.currentAssessmentId) {
+              const assessment = appState.previousAssessments.find(a => a.id === appState.currentAssessmentId);
+              if (assessment?.photos?.length > 0) {
+                renderAssessmentGallery(assessment.photos);
+              } else {
+                document.getElementById('assessment-gallery').classList.add('hidden');
+              }
+            } else {
+              document.getElementById('assessment-gallery').classList.add('hidden');
+            }
+            
+            // Reset current uploads
+            appState.currentPhotos = [];
+            elements.photoPreview.innerHTML = '';
+            elements.photoCaption.value = '';
+          }
         }
       });
-      
-      // If switching to photos tab, clear any current uploads
-      if (tab === 'photos') {
-        appState.currentPhotos = [];
-        elements.photoPreview.innerHTML = '';
-        elements.photoCaption.value = '';
-      }
     }
 
     // =============================================
@@ -2976,30 +3104,30 @@ function createTrendChart() {
       });
       
       // Modal buttons
-document.getElementById('user-guide-card').addEventListener('click', () => {
-  document.getElementById('user-guide-modal').classList.remove('hidden');
-});
+      document.getElementById('user-guide-card').addEventListener('click', () => {
+        document.getElementById('user-guide-modal').classList.remove('hidden');
+      });
 
-document.getElementById('terms-of-use-card').addEventListener('click', () => {
-  document.getElementById('terms-modal').classList.remove('hidden');
-});
+      document.getElementById('terms-of-use-card').addEventListener('click', () => {
+        document.getElementById('terms-modal').classList.remove('hidden');
+      });
 
-// Close modals
-document.querySelectorAll('.close-modal').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    document.querySelectorAll('.modal').forEach(modal => {
-      modal.classList.add('hidden');
-    });
-  });
-});
+      // Close modals
+      document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          document.querySelectorAll('.modal').forEach(modal => {
+            modal.classList.add('hidden');
+          });
+        });
+      });
 
-// Close when clicking outside modal
-window.addEventListener('click', (e) => {
-  if (e.target.classList.contains('modal')) {
-    e.target.classList.add('hidden');
-  }
-});
+      // Close when clicking outside modal
+      window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+          e.target.classList.add('hidden');
+        }
+      });
       
       // Submit button
       elements.submitBtn.addEventListener('click', calculateScore);
@@ -3103,4 +3231,4 @@ window.addEventListener('click', (e) => {
   </div>
 </div>
 </body>
-    </html>
+</html>
